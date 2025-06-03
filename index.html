@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immersive Video Experience</title>
+    <!-- Load Tailwind CSS for utility classes like rounded corners and shadows -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for precise positioning and effects */
+        body {
+            font-family: "Inter", sans-serif;
+            overflow: hidden; /* Prevents scrolling (up/down, left/right) */
+            height: 100vh; /* Ensures the body takes full viewport height */
+            margin: 0; /* Removes default body margin */
+            display: flex; /* Enables flexbox for centering content */
+            justify-content: center; /* Centers content horizontally */
+            align-items: center; /* Centers content vertically */
+            position: relative; /* Needed for absolute positioning of background video */
+            background-color: #000; /* Fallback background color */
+        }
+
+        /* Container for the background video iframe */
+        .background-video-container {
+            position: absolute; /* Positions relative to the body */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Ensures video doesn't spill out */
+            z-index: -1; /* Sends the background video behind other content */
+        }
+
+        /* Styling for the background video iframe itself */
+        .background-video {
+            width: 100vw; /* Make it cover the full viewport width */
+            height: 100vh; /* Make it cover the full viewport height */
+            /* The object-fit property is typically for <video> tags, but for iframes,
+               we ensure coverage by positioning and scaling. */
+            filter: blur(10px); /* Applies a blur effect to the background video */
+            /* Slightly enlarge and center the video to hide any blur edges that might appear */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.1);
+            border: none; /* Removes default iframe border */
+        }
+
+        /* Container for the main, unblurred video */
+        .main-video-container {
+            position: relative; /* Needed for absolute positioning of the iframe inside */
+            z-index: 1; /* Ensures the main video is above the background */
+            border-radius: 1rem; /* Applies rounded corners using Tailwind's default radius */
+            overflow: hidden; /* Clips content to ensure rounded corners are visible */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow for depth */
+            margin: 2rem; /* Provides ample margin from all sides */
+
+            /* Responsive aspect ratio for the main video (16:9) */
+            width: 80vw; /* Sets initial width relative to viewport width */
+            max-width: 960px; /* Limits maximum width for larger screens */
+            padding-bottom: 45vw; /* This creates a 16:9 aspect ratio (9/16 * 80vw = 45vw) */
+            max-height: 540px; /* Limits maximum height for larger screens */
+        }
+
+        /* Styling for the main video iframe inside its container */
+        .main-video-container iframe {
+            position: absolute; /* Positions relative to its parent container */
+            top: 0;
+            left: 0;
+            width: 100%; /* Makes the iframe fill its container */
+            height: 100%; /* Makes the iframe fill its container */
+            border: none; /* Removes default iframe border */
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video Section -->
+    <div class="background-video-container">
+        <iframe
+            class="background-video"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&playlist=dQw4w9WgXcQ&controls=0&mute=1&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="Blurred Background YouTube Video"
+        ></iframe>
+    </div>
+
+    <!-- Main Centered Video Section -->
+    <div class="main-video-container">
+        <iframe
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&playlist=dQw4w9WgXcQ&controls=1&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            title="Main Centered YouTube Video"
+        ></iframe>
+    </div>
+</body>
+</html>
