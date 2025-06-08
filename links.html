@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renj Link Shortener</title>
+    <!-- Favicon and Touch Icons will be dynamically added by cdn-loader.js -->
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind configuration to use the Inter font and enable JIT mode
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic styling to ensure content is centered and pleasant */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">renj.top Shortener</h1>
+
+        <!-- Input for the long URL -->
+        <div class="mb-4">
+            <label for="longUrl" class="block text-gray-700 text-sm font-semibold mb-2">Enter Long URL:</label>
+            <input type="url" id="longUrl" placeholder="https://example.com/very/long/path"
+                   class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <!-- Optional input for a custom short code -->
+        <div class="mb-6">
+            <label for="customCode" class="block text-gray-700 text-sm font-semibold mb-2">Custom Short Code (Optional):</label>
+            <input type="text" id="customCode" placeholder="my-custom-link"
+                   class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <!-- Button to shorten the URL -->
+        <button id="shortenBtn"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105">
+            Shorten Link
+        </button>
+
+        <!-- Display area for the shortened URL -->
+        <div id="resultContainer" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
+            <p class="text-blue-800 text-sm font-medium mb-2">Your Shortened Link:</p>
+            <div class="flex items-center space-x-2">
+                <input type="text" id="shortUrlDisplay" readonly
+                       class="flex-grow bg-blue-100 border border-blue-200 rounded-lg py-2 px-3 text-blue-900 text-sm font-mono cursor-text focus:outline-none">
+                <button id="copyBtn"
+                        class="bg-blue-200 hover:bg-blue-300 text-blue-800 font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-150 ease-in-out">
+                    Copy
+                </button>
+            </div>
+            <p id="message" class="text-red-600 text-xs mt-2 hidden"></p>
+        </div>
+    </div>
+
+    <script>
+        // Get references to HTML elements
+        const longUrlInput = document.getElementById('longUrl');
+        const customCodeInput = document.getElementById('customCode');
+        const shortenBtn = document.getElementById('shortenBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const shortUrlDisplay = document.getElementById('shortUrlDisplay');
+        const copyBtn = document.getElementById('copyBtn');
+        const messageDisplay = document.getElementById('message');
+
+        // Event listener for the shorten button click
+        shortenBtn.addEventListener('click', async () => {
+            const longUrl = longUrlInput.value.trim();
+            const customCode = customCodeInput.value.trim();
+
+            // Basic validation for the long URL
+            if (!longUrl) {
+                showMessage('Please enter a URL to shorten.', 'red');
+                return;
+            }
+
+            // Simple URL format check (not exhaustive, but catches common errors)
+            if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
+                showMessage('URL must start with http:// or https://', 'red');
+                return;
+            }
+
+            // Prepare the request payload
+            const payload = { url: longUrl };
+            if (customCode) {
+                payload.short = customCode;
+            }
+
+            showMessage('Shortening...', 'gray'); // Show a temporary loading message
+            shortenBtn.disabled = true; // Disable button during processing
+
+            try {
+                // Make a POST request to your Cloudflare Worker's API endpoint
+                // The Worker will be at your domain, e.g., renj.top/api/shorten
+                const response = await fetch('/api/shorten', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // If the request was successful, display the shortened URL
+                    const shortUrl = `${window.location.origin}/${data.shortCode}`;
+                    shortUrlDisplay.value = shortUrl;
+                    resultContainer.classList.remove('hidden'); // Show the result container
+                    showMessage('Link shortened successfully!', 'green');
+                } else {
+                    // Handle errors from the Worker (e.g., custom code already taken)
+                    showMessage(data.error || 'An error occurred while shortening the link.', 'red');
+                    resultContainer.classList.add('hidden'); // Hide result container on error
+                }
+            } catch (error) {
+                // Handle network errors
+                console.error('Fetch error:', error);
+                showMessage('Network error. Please try again.', 'red');
+                resultContainer.classList.add('hidden'); // Hide result container on error
+            } finally {
+                shortenBtn.disabled = false; // Re-enable the button
+            }
+        });
+
+        // Event listener for the copy button click
+        copyBtn.addEventListener('click', () => {
+            shortUrlDisplay.select(); // Select the text in the input field
+            shortUrlDisplay.setSelectionRange(0, 99999); // For mobile devices
+            try {
+                // Use document.execCommand('copy') for better compatibility in iframes
+                document.execCommand('copy');
+                showMessage('Copied to clipboard!', 'blue');
+            } catch (err) {
+                showMessage('Failed to copy. Please copy manually.', 'red');
+                console.error('Failed to copy text: ', err);
+            }
+        });
+
+        // Function to display messages to the user
+        function showMessage(msg, type) {
+            messageDisplay.textContent = msg;
+            messageDisplay.className = `text-${type}-600 text-xs mt-2`; // Apply color based on type
+            messageDisplay.classList.remove('hidden');
+            // Hide message after a few seconds unless it's an error
+            if (type !== 'red') {
+                setTimeout(() => {
+                    messageDisplay.classList.add('hidden');
+                }, 3000);
+            }
+        }
+    </script>
+    <!-- Your cdn-loader.js should be linked here, likely at the end of body or in head. -->
+    <!-- Assuming cdn-loader.js will dynamically add meta description and touch icons -->
+    <!-- <script src="/cdn-loader.js"></script> -->
+</body>
+</html>
