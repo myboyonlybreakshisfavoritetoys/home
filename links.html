@@ -3,170 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Renj Link Shortener</title>
-    <!-- Favicon and Touch Icons will be dynamically added by cdn-loader.js -->
+    <title>Shorten Link - renj.top</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Tailwind configuration to use the Inter font and enable JIT mode
+        // Tailwind configuration to use Inter and Cedarville Cursive fonts
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'], // Default sans-serif for body text
+                        cedarville: ['"Cedarville Cursive"', 'cursive'], // Custom font for titles
                     },
                 }
             }
         }
     </script>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Inter and Cedarville Cursive -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Cedarville+Cursive&display=swap" rel="stylesheet">
     <style>
-        /* Basic styling to ensure content is centered and pleasant */
+        /* Ensure no scrolling and full viewport height for main content */
+        html, body {
+            overflow: hidden; /* Prevent scrolling in all directions */
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Basic styling for the body */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
+            font-family: 'Inter', sans-serif; /* Fallback for body text */
+            background-color: #000; /* Solid black fallback */
+            color: #fff; /* White text by default */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            padding: 1rem;
+            position: relative; /* Needed for absolute positioning of gradient background */
+        }
+
+        /* Animated Gradient Background */
+        .gradient-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1A1A1A, #3A3A3A, #1A1A1A, #4A4A4A); /* More obvious gradient */
+            background-size: 400% 400%; /* Make gradient larger than viewport */
+            animation: gradientMove 15s ease infinite; /* Animate it slowly */
+            z-index: -1; /* Place behind other content */
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">renj.top Shortener</h1>
+<body class="bg-black text-white">
 
-        <!-- Input for the long URL -->
-        <div class="mb-4">
-            <label for="longUrl" class="block text-gray-700 text-sm font-semibold mb-2">Enter Long URL:</label>
-            <input type="url" id="longUrl" placeholder="https://example.com/very/long/path"
-                   class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-        </div>
+    <!-- Animated Gradient Background -->
+    <div class="gradient-background"></div>
 
-        <!-- Optional input for a custom short code -->
-        <div class="mb-6">
-            <label for="customCode" class="block text-gray-700 text-sm font-semibold mb-2">Custom Short Code (Optional):</label>
-            <input type="text" id="customCode" placeholder="my-custom-link"
-                   class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-        </div>
+    <div class="flex flex-col items-center justify-center min-h-screen w-full p-4 relative z-10">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-xl text-center">
+            <h1 class="text-3xl font-bold text-white mb-6">Shorten Your Link</h1>
 
-        <!-- Button to shorten the URL -->
-        <button id="shortenBtn"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105">
-            Shorten Link
-        </button>
+            <div id="messageBox" class="p-3 rounded-lg text-sm mb-4 hidden" role="alert"></div>
 
-        <!-- Display area for the shortened URL -->
-        <div id="resultContainer" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
-            <p class="text-blue-800 text-sm font-medium mb-2">Your Shortened Link:</p>
-            <div class="flex items-center space-x-2">
-                <input type="text" id="shortUrlDisplay" readonly
-                       class="flex-grow bg-blue-100 border border-blue-200 rounded-lg py-2 px-3 text-blue-900 text-sm font-mono cursor-text focus:outline-none">
-                <button id="copyBtn"
-                        class="bg-blue-200 hover:bg-blue-300 text-blue-800 font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-150 ease-in-out">
-                    Copy
+            <form id="shortenForm" class="flex flex-col space-y-4">
+                <input type="url" id="longUrlInput" placeholder="Enter long URL (e.g., https://example.com/very/long/path)" required
+                       class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400">
+                <input type="text" id="customShortCodeInput" placeholder="Optional: Custom short code (e.g., my-link)"
+                       class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400">
+                <button type="submit" id="shortenButton"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out w-full">
+                    Shorten Link
                 </button>
+            </form>
+
+            <div id="resultBox" class="mt-6 p-4 bg-gray-700 rounded-lg hidden">
+                <p class="text-lg text-white font-medium mb-2">Your Shortened Link:</p>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-3 md:space-y-0 md:space-x-3">
+                    <a id="shortenedLink" target="_blank" rel="noopener noreferrer"
+                       class="text-blue-400 hover:underline text-lg md:text-xl break-all"></a>
+                    <button id="copyButton"
+                            class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+                        Copy
+                    </button>
+                </div>
             </div>
-            <p id="message" class="text-red-600 text-xs mt-2 hidden"></p>
         </div>
     </div>
 
     <script>
-        // Get references to HTML elements
-        const longUrlInput = document.getElementById('longUrl');
-        const customCodeInput = document.getElementById('customCode');
-        const shortenBtn = document.getElementById('shortenBtn');
-        const resultContainer = document.getElementById('resultContainer');
-        const shortUrlDisplay = document.getElementById('shortUrlDisplay');
-        const copyBtn = document.getElementById('copyBtn');
-        const messageDisplay = document.getElementById('message');
+        const shortenForm = document.getElementById('shortenForm');
+        const longUrlInput = document.getElementById('longUrlInput');
+        const customShortCodeInput = document.getElementById('customShortCodeInput');
+        const shortenButton = document.getElementById('shortenButton');
+        const messageBox = document.getElementById('messageBox');
+        const resultBox = document.getElementById('resultBox');
+        const shortenedLink = document.getElementById('shortenedLink');
+        const copyButton = document.getElementById('copyButton');
 
-        // Event listener for the shorten button click
-        shortenBtn.addEventListener('click', async () => {
+        // Function to display messages in the message box
+        function showMessage(message, type = 'info') {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-500', 'bg-green-500', 'bg-blue-500', 'text-red-100', 'text-green-100', 'text-blue-100');
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-700', 'text-red-100');
+            } else if (type === 'success') {
+                messageBox.classList.add('bg-green-700', 'text-green-100');
+            } else {
+                messageBox.classList.add('bg-blue-700', 'text-blue-100');
+            }
+            messageBox.classList.remove('hidden');
+            resultBox.classList.add('hidden'); // Hide result box if a new message is shown
+        }
+
+        // Function to hide the message box
+        function hideMessage() {
+            messageBox.classList.add('hidden');
+        }
+
+        // Handle form submission
+        shortenForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+
             const longUrl = longUrlInput.value.trim();
-            const customCode = customCodeInput.value.trim();
+            const customShort = customShortCodeInput.value.trim();
 
-            // Basic validation for the long URL
             if (!longUrl) {
-                showMessage('Please enter a URL to shorten.', 'red');
+                showMessage('Please enter a long URL to shorten.', 'error');
                 return;
             }
 
-            // Simple URL format check (not exhaustive, but catches common errors)
-            if (!longUrl.startsWith('http://') && !longUrl.startsWith('https://')) {
-                showMessage('URL must start with http:// or https://', 'red');
-                return;
-            }
-
-            // Prepare the request payload
-            const payload = { url: longUrl };
-            if (customCode) {
-                payload.short = customCode;
-            }
-
-            showMessage('Shortening...', 'gray'); // Show a temporary loading message
-            shortenBtn.disabled = true; // Disable button during processing
+            shortenButton.disabled = true; // Disable button to prevent multiple submissions
+            shortenButton.textContent = 'Shortening...';
+            hideMessage(); // Hide previous messages
 
             try {
-                // Make a POST request to your Cloudflare Worker's API endpoint
-                // The Worker will be at your domain, e.g., renj.top/api/shorten
                 const response = await fetch('/api/shorten', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(payload),
+                    body: JSON.stringify({ url: longUrl, short: customShort }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // If the request was successful, display the shortened URL
-                    const shortUrl = `${window.location.origin}/${data.shortCode}`;
-                    shortUrlDisplay.value = shortUrl;
-                    resultContainer.classList.remove('hidden'); // Show the result container
-                    showMessage('Link shortened successfully!', 'green');
+                    const shortCode = data.shortCode;
+                    const fullShortUrl = `${window.location.origin}/${shortCode}`; // Construct full short URL
+
+                    shortenedLink.href = fullShortUrl;
+                    shortenedLink.textContent = fullShortUrl;
+                    resultBox.classList.remove('hidden');
+                    showMessage('Link shortened successfully!', 'success');
+
+                    // Clear inputs after successful shortening
+                    longUrlInput.value = '';
+                    customShortCodeInput.value = '';
                 } else {
-                    // Handle errors from the Worker (e.g., custom code already taken)
-                    showMessage(data.error || 'An error occurred while shortening the link.', 'red');
-                    resultContainer.classList.add('hidden'); // Hide result container on error
+                    showMessage(data.error || 'Failed to shorten link. Please try again.', 'error');
                 }
             } catch (error) {
-                // Handle network errors
-                console.error('Fetch error:', error);
-                showMessage('Network error. Please try again.', 'red');
-                resultContainer.classList.add('hidden'); // Hide result container on error
+                console.error('Error:', error);
+                showMessage('Network error or server unreachable. Please try again.', 'error');
             } finally {
-                shortenBtn.disabled = false; // Re-enable the button
+                shortenButton.disabled = false; // Re-enable button
+                shortenButton.textContent = 'Shorten Link';
             }
         });
 
-        // Event listener for the copy button click
-        copyBtn.addEventListener('click', () => {
-            shortUrlDisplay.select(); // Select the text in the input field
-            shortUrlDisplay.setSelectionRange(0, 99999); // For mobile devices
+        // Handle copy button click
+        copyButton.addEventListener('click', () => {
             try {
-                // Use document.execCommand('copy') for better compatibility in iframes
-                document.execCommand('copy');
-                showMessage('Copied to clipboard!', 'blue');
+                const textToCopy = shortenedLink.textContent;
+                const tempInput = document.createElement('textarea');
+                tempInput.value = textToCopy;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy'); // Using execCommand for broader compatibility
+                document.body.removeChild(tempInput);
+                showMessage('Copied to clipboard!', 'info');
             } catch (err) {
-                showMessage('Failed to copy. Please copy manually.', 'red');
-                console.error('Failed to copy text: ', err);
+                console.error('Failed to copy: ', err);
+                showMessage('Failed to copy. Please copy manually.', 'error');
             }
         });
-
-        // Function to display messages to the user
-        function showMessage(msg, type) {
-            messageDisplay.textContent = msg;
-            messageDisplay.className = `text-${type}-600 text-xs mt-2`; // Apply color based on type
-            messageDisplay.classList.remove('hidden');
-            // Hide message after a few seconds unless it's an error
-            if (type !== 'red') {
-                setTimeout(() => {
-                    messageDisplay.classList.add('hidden');
-                }, 3000);
-            }
-        }
     </script>
-    <!-- Your cdn-loader.js should be linked here, likely at the end of body or in head. -->
-    <!-- Assuming cdn-loader.js will dynamically add meta description and touch icons -->
-    <!-- <script src="/cdn-loader.js"></script> -->
 </body>
 </html>
