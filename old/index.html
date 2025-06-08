@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>just all about me</title>
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles for the body and html to prevent scrolling and set font */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevents all scrolling */
+            height: 100vh; /* Ensures the body takes full viewport height */
+            display: flex; /* Uses flexbox for easy centering of the main video */
+            justify-content: center; /* Centers horizontally */
+            align-items: center; /* Centers vertically */
+            position: relative; /* Needed for z-index context of child elements */
+            background-color: #000; /* Fallback background color if video fails to load */
+        }
+
+        html {
+            overflow: hidden; /* Ensures no scrollbars on the html element either */
+        }
+
+        /* Styles for the blurred background video */
+        .background-video {
+            position: fixed; /* Positions the video relative to the viewport */
+            top: 0;
+            left: 0;
+            width: 100vw; /* Takes full viewport width */
+            height: 100vh; /* Takes full viewport height */
+            object-fit: cover; /* Ensures the video covers the entire area without distortion */
+            filter: blur(10px); /* Applies a blur effect to the background video */
+            z-index: -2; /* Sends the background video behind all other content */
+            opacity: 0.7; /* Makes the background video slightly transparent */
+        }
+
+        /* Container for the main video to apply styling like rounded corners and shadow */
+        .main-video-container {
+            position: relative; /* Allows z-index to work */
+            z-index: -1; /* Positions the main video above the background video */
+            width: 80vw; /* Sets a responsive width for the main video */
+            max-width: 900px; /* Limits the maximum width of the main video on larger screens */
+            height: auto; /* Maintains the video's aspect ratio */
+            border-radius: 1rem; /* Applies rounded corners to the container */
+            overflow: hidden; /* Ensures the video inside respects the border-radius */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow for depth */
+        }
+
+        /* Styles for the main video element */
+        .main-video {
+            display: block; /* Removes extra space below the video */
+            width: 100%; /* Ensures the video fills its container */
+            height: auto; /* Maintains the video's aspect ratio */
+            border-radius: 1rem; /* Applies rounded corners directly to the video element */
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video Element -->
+    <video class="background-video" autoplay loop muted playsinline>
+        <source src="https://photos.renj.top/thearcherlyrics.mp4" type="video/mp4">
+        <!-- Fallback message if the browser does not support the video tag -->
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Main Video Container -->
+    <div class="main-video-container">
+        <!-- Main Video Element -->
+        <video class="main-video" autoplay loop playsinline>
+            <source src="https://photos.renj.top/thearcherlyrics.mp4" type="video/mp4">
+            <!-- Fallback message if the browser does not support the video tag -->
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        // JavaScript to ensure videos play, especially if browser autoplay policies block them initially.
+        // It attempts to play the videos on any user interaction (click, touch, keydown).
+        document.addEventListener('DOMContentLoaded', () => {
+            const backgroundVideo = document.querySelector('.background-video');
+            const mainVideo = document.querySelector('.main-video');
+
+            // Function to attempt playing both videos
+            const playVideos = () => {
+                if (backgroundVideo.paused) {
+                    // Attempt to play the background video, catch any errors (e.g., browser blocking)
+                    backgroundVideo.play().catch(e => console.log("Background video play failed:", e));
+                }
+                if (mainVideo.paused) {
+                    // Attempt to play the main video, catch any errors
+                    mainVideo.play().catch(e => console.log("Main video play failed:", e));
+                }
+            };
+
+            // Add event listeners to the body to trigger video playback on user interaction
+            document.body.addEventListener('click', playVideos);
+            document.body.addEventListener('touchstart', playVideos);
+            document.body.addEventListener('keydown', playVideos);
+
+            // Initial attempt to play videos on page load (may be blocked by browser policies)
+            playVideos();
+        });
+    </script>
+</body>
+</html>
