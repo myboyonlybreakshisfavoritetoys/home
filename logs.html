@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renj Shortened Links Admin</title>
+    <!-- Favicon and Touch Icons will be dynamically added by cdn-loader.js -->
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 8px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: #f7fafc;
+        }
+        /* Styles for the custom modal */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4">
+
+    <!-- Custom PIN Modal -->
+    <div id="pinModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Enter PIN to Access Logs</h2>
+            <input type="password" id="pinInput" placeholder="Enter PIN"
+                   class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 mb-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <button id="pinSubmitBtn"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out">
+                Submit PIN
+            </button>
+            <p id="pinErrorMessage" class="text-red-600 text-sm mt-2 hidden"></p>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal for Deletion -->
+    <div id="confirmModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
+            <p id="confirmMessage" class="mb-6"></p>
+            <div class="flex justify-around">
+                <button id="confirmDeleteBtn"
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+                    Delete
+                </button>
+                <button id="cancelDeleteBtn"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl mt-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Shortened Links Log</h1>
+
+        <div class="mb-4">
+            <p class="text-sm text-gray-600">
+                <strong class="text-red-600">Important:</strong> This page publicly displays all your shortened links and their original destinations. Be mindful of privacy and security for any sensitive content.
+            </p>
+        </div>
+
+        <div id="loadingMessage" class="text-center text-gray-500 mb-4 hidden">
+            Loading links...
+        </div>
+        <div id="errorMessage" class="text-center text-red-600 mb-4 hidden">
+            Failed to load links. Please try again later.
+        </div>
+
+        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Short Link
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Original URL
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="linksTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- Links will be loaded here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <p id="noLinksMessage" class="text-center text-gray-500 mt-4 hidden">No links found yet.</p>
+    </div>
+
+    <script>
+        // DOM elements
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const linksTableBody = document.getElementById('linksTableBody');
+        const noLinksMessage = document.getElementById('noLinksMessage');
+
+        // PIN Modal Elements
+        const pinModal = document.getElementById('pinModal');
+        const pinInput = document.getElementById('pinInput');
+        const pinSubmitBtn = document.getElementById('pinSubmitBtn');
+        const pinErrorMessage = document.getElementById('pinErrorMessage');
+        const pinModalClose = pinModal.querySelector('.modal-close');
+
+        // Confirmation Modal Elements
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+        let adminPin = ''; // This will store the successfully entered PIN
+
+        // --- MODAL FUNCTIONS ---
+        function showPinModal(message = '') {
+            pinInput.value = ''; // Clear previous input
+            pinErrorMessage.textContent = message;
+            pinErrorMessage.classList.toggle('hidden', !message);
+            pinModal.classList.remove('hidden');
+            pinInput.focus();
+        }
+
+        function hidePinModal() {
+            pinModal.classList.add('hidden');
+            pinErrorMessage.classList.add('hidden');
+        }
+
+        function showConfirmModal(message, onConfirm) {
+            confirmMessage.textContent = message;
+            confirmModal.classList.remove('hidden');
+            confirmDeleteBtn.onclick = () => {
+                hideConfirmModal();
+                onConfirm();
+            };
+            cancelDeleteBtn.onclick = hideConfirmModal;
+        }
+
+        function hideConfirmModal() {
+            confirmModal.classList.add('hidden');
+        }
+
+        // --- AUTHENTICATED API CALL HELPER ---
+        async function authenticatedFetch(url, options = {}) {
+            if (!adminPin) {
+                showPinModal('Please enter PIN to proceed.');
+                throw new Error('PIN not provided.'); // Stop execution until PIN is entered
+            }
+            options.headers = {
+                ...options.headers,
+                'X-Admin-PIN': adminPin, // Add the PIN to the headers
+            };
+
+            const response = await fetch(url, options);
+
+            if (response.status === 401) {
+                // If unauthorized, prompt for PIN again
+                adminPin = ''; // Clear stored PIN
+                showPinModal('Incorrect PIN. Please try again.');
+                throw new Error('Unauthorized'); // Stop execution
+            }
+            return response;
+        }
+
+        // --- FUNCTIONS FOR LINKS ---
+
+        // Function to copy text to clipboard
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showMessage('Copied to clipboard!', 'blue');
+        }
+
+        // Function to display messages to the user (using p tag)
+        function showMessage(msg, type) {
+            const tempMessageEl = document.createElement('p');
+            tempMessageEl.textContent = msg;
+            tempMessageEl.className = `text-${type}-600 text-center text-sm mt-4`;
+            // Append message near the top of the content div for visibility
+            document.querySelector('.bg-white').insertBefore(tempMessageEl, document.querySelector('.bg-white').children[2]);
+            setTimeout(() => {
+                tempMessageEl.remove();
+            }, 4000);
+        }
+
+        // Function to delete a link
+        async function deleteLink(shortCode, rowElement) {
+            loadingMessage.classList.remove('hidden');
+            try {
+                const response = await authenticatedFetch('/api/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ shortCode: shortCode }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    rowElement.remove(); // Remove the row from the table
+                    showMessage(data.message, 'green');
+                    // Check if table is empty after deletion
+                    if (linksTableBody.children.length === 0) {
+                        noLinksMessage.classList.remove('hidden');
+                    }
+                } else {
+                    showMessage(data.error || 'Failed to delete link.', 'red');
+                }
+            } catch (error) {
+                console.error('Error deleting link:', error);
+                if (error.message !== 'Unauthorized') { // Don't show generic error if it was an auth issue
+                    showMessage('Network error or failed to delete link.', 'red');
+                }
+            } finally {
+                loadingMessage.classList.add('hidden');
+            }
+        }
+
+        // Function to fetch and display links
+        async function fetchAndDisplayLinks() {
+            if (!adminPin) { // Don't fetch if PIN not entered yet
+                return;
+            }
+
+            loadingMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            linksTableBody.innerHTML = ''; // Clear existing content
+            noLinksMessage.classList.add('hidden');
+
+            try {
+                const response = await authenticatedFetch('/api/list'); // Use authenticated fetch
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const links = await response.json();
+
+                if (links.length === 0) {
+                    noLinksMessage.classList.remove('hidden');
+                    return;
+                }
+
+                links.forEach(link => {
+                    const row = document.createElement('tr');
+                    const shortUrl = `${window.location.origin}/${link.shortCode}`;
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                            <a href="${shortUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                                ${shortUrl}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 break-words max-w-xs overflow-hidden text-ellipsis">
+                            <a href="${link.longUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                                ${link.longUrl}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 flex space-x-2">
+                            <button class="copy-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg text-xs transition duration-150 ease-in-out" data-short-url="${shortUrl}">
+                                Copy
+                            </button>
+                            <button class="delete-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs transition duration-150 ease-in-out" data-short-code="${link.shortCode}">
+                                Delete
+                            </button>
+                        </td>
+                    `;
+                    linksTableBody.appendChild(row);
+                });
+
+                // Add event listeners to copy and delete buttons
+                document.querySelectorAll('.copy-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const urlToCopy = event.target.dataset.shortUrl;
+                        copyToClipboard(urlToCopy);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const shortCodeToDelete = event.target.dataset.shortCode;
+                        const rowToDelete = event.target.closest('tr');
+                        showConfirmModal(`Are you sure you want to delete '${shortCodeToDelete}'?`, () => {
+                            deleteLink(shortCodeToDelete, rowToDelete);
+                        });
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error fetching links:', error);
+                if (error.message !== 'Unauthorized') {
+                    errorMessage.classList.remove('hidden');
+                }
+            } finally {
+                loadingMessage.classList.add('hidden');
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        pinSubmitBtn.addEventListener('click', async () => {
+            const enteredPin = pinInput.value.trim();
+            if (enteredPin) {
+                adminPin = enteredPin;
+                hidePinModal();
+                await fetchAndDisplayLinks(); // Try fetching links with the entered PIN
+            } else {
+                pinErrorMessage.textContent = 'Please enter the PIN.';
+                pinErrorMessage.classList.remove('hidden');
+            }
+        });
+
+        pinModalClose.addEventListener('click', () => {
+            hidePinModal();
+            // Optionally, redirect or show a message if user closes without entering PIN
+        });
+
+        // Initial load: Show PIN modal first
+        document.addEventListener('DOMContentLoaded', () => {
+            showPinModal();
+        });
+
+        // Your cdn-loader.js should be linked here, likely at the end of body or in head.
+        // Assuming cdn-loader.js will dynamically add meta description and touch icons
+        // <script src="/cdn-loader.js"></script>
+    </script>
+</body>
+</html>
