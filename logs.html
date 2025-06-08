@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Renj Shortened Links Admin</title>
-    <!-- Favicon and Touch Icons will be dynamically added by cdn-loader.js -->
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -73,14 +72,46 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* Dark mode adjustments for modals (optional, but good for consistency) */
+        .modal-glassmorphic-content {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            color: #fff;
+        }
+        .modal-glassmorphic-content input {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+        .modal-glassmorphic-content input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        /* Specific modal styling for Logs page */
+        #pinModal .modal-content, #confirmModal .modal-content {
+            background-color: #1a1a1a; /* Dark background for modals on logs page */
+            color: #fff; /* White text */
+        }
+        #pinModal .modal-content input, #confirmModal .modal-content input {
+            background-color: #333;
+            border-color: #555;
+            color: #fff;
+        }
+        #pinModal .modal-content input::placeholder {
+            color: #bbb;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4">
+<body class="min-h-screen flex flex-col items-center p-4 bg-gray-900 text-white"> <!-- Adjusted body background for consistency -->
 
     <!-- Custom PIN Modal -->
     <div id="pinModal" class="modal hidden">
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <span class="modal-close text-gray-400 hover:text-white">&times;</span>
             <h2 class="text-xl font-bold mb-4">Enter PIN to Access Logs</h2>
             <input type="password" id="pinInput" placeholder="Enter PIN"
                    class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 mb-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -88,7 +119,7 @@
                     class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out">
                 Submit PIN
             </button>
-            <p id="pinErrorMessage" class="text-red-600 text-sm mt-2 hidden"></p>
+            <p id="pinErrorMessage" class="text-red-400 text-sm mt-2 hidden"></p>
         </div>
     </div>
 
@@ -110,43 +141,68 @@
         </div>
     </div>
 
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl mt-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Shortened Links Log</h1>
+    <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-4xl mt-8"> <!-- Adjusted main content background -->
+        <h1 class="text-3xl font-bold text-white mb-6 text-center">Shortened Links Log</h1>
 
         <div class="mb-4">
-            <p class="text-sm text-gray-600">
-                <strong class="text-red-600">Important:</strong> This page publicly displays all your shortened links and their original destinations. Be mindful of privacy and security for any sensitive content.
+            <p class="text-sm text-gray-400">
+                <strong class="text-red-500">Important:</strong> This page publicly displays all your shortened links and their original destinations. Be mindful of privacy and security for any sensitive content.
             </p>
         </div>
 
-        <div id="loadingMessage" class="text-center text-gray-500 mb-4 hidden">
+        <!-- Sorting UI -->
+        <div class="flex justify-between items-center mb-4">
+            <div id="currentSortOrder" class="text-sm text-gray-300">Sorted by: Short Code (A-Z)</div>
+            <div class="relative inline-block text-left">
+                <div>
+                    <button type="button" id="sortOptionsBtn"
+                            class="inline-flex justify-center rounded-md border border-gray-600 shadow-sm px-4 py-2 bg-gray-700 text-sm font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500"
+                            aria-haspopup="true" aria-expanded="true">
+                        Sort Options
+                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                </div>
+
+                <div id="sortMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-20" role="menu" aria-orientation="vertical" aria-labelledby="sortOptionsBtn">
+                    <div class="py-1" role="none">
+                        <a href="#" class="sort-option block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-white" role="menuitem" data-sort="shortCode-asc">Short Code (A-Z)</a>
+                        <a href="#" class="sort-option block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-white" role="menuitem" data-sort="shortCode-desc">Short Code (Z-A)</a>
+                        <a href="#" class="sort-option block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-white" role="menuitem" data-sort="createdAt-desc">Newest to Oldest</a>
+                        <a href="#" class="sort-option block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-white" role="menuitem" data-sort="createdAt-asc">Oldest to Newest</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="loadingMessage" class="text-center text-gray-400 mb-4 hidden">
             Loading links...
         </div>
-        <div id="errorMessage" class="text-center text-red-600 mb-4 hidden">
+        <div id="errorMessage" class="text-center text-red-400 mb-4 hidden">
             Failed to load links. Please try again later.
         </div>
 
-        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <div class="overflow-x-auto rounded-lg border border-gray-700 shadow-sm">
+            <table class="min-w-full divide-y divide-gray-700">
+                <thead class="bg-gray-700">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                             Short Link
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                             Original URL
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                             Actions
                         </th>
                     </tr>
                 </thead>
-                <tbody id="linksTableBody" class="bg-white divide-y divide-gray-200">
+                <tbody id="linksTableBody" class="bg-gray-800 divide-y divide-gray-700">
                     <!-- Links will be loaded here by JavaScript -->
                 </tbody>
             </table>
         </div>
-        <p id="noLinksMessage" class="text-center text-gray-500 mt-4 hidden">No links found yet.</p>
+        <p id="noLinksMessage" class="text-center text-gray-400 mt-4 hidden">No links found yet.</p>
     </div>
 
     <script>
@@ -169,7 +225,15 @@
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
+        // Sorting UI Elements
+        const sortOptionsBtn = document.getElementById('sortOptionsBtn');
+        const sortMenu = document.getElementById('sortMenu');
+        const sortOptions = document.querySelectorAll('.sort-option');
+        const currentSortOrderDisplay = document.getElementById('currentSortOrder');
+
         let adminPin = ''; // This will store the successfully entered PIN
+        let allLinks = []; // Store all fetched links for client-side sorting
+        let currentSort = localStorage.getItem('currentLinkSort') || 'shortCode-asc'; // Default sort order
 
         // --- MODAL FUNCTIONS ---
         function showPinModal(message = '') {
@@ -202,8 +266,10 @@
         // --- AUTHENTICATED API CALL HELPER ---
         async function authenticatedFetch(url, options = {}) {
             if (!adminPin) {
+                // This scenario should ideally be prevented by the PIN modal,
+                // but as a fallback, show modal if somehow a request without PIN gets triggered.
                 showPinModal('Please enter PIN to proceed.');
-                throw new Error('PIN not provided.'); // Stop execution until PIN is entered
+                throw new Error('PIN not provided.');
             }
             options.headers = {
                 ...options.headers,
@@ -215,13 +281,14 @@
             if (response.status === 401) {
                 // If unauthorized, prompt for PIN again
                 adminPin = ''; // Clear stored PIN
+                localStorage.removeItem('adminLoggedIn'); // Clear login state
                 showPinModal('Incorrect PIN. Please try again.');
-                throw new Error('Unauthorized'); // Stop execution
+                throw new Error('Unauthorized');
             }
             return response;
         }
 
-        // --- FUNCTIONS FOR LINKS ---
+        // --- FUNCTIONS FOR LINKS & SORTING ---
 
         // Function to copy text to clipboard
         function copyToClipboard(text) {
@@ -238,9 +305,9 @@
         function showMessage(msg, type) {
             const tempMessageEl = document.createElement('p');
             tempMessageEl.textContent = msg;
-            tempMessageEl.className = `text-${type}-600 text-center text-sm mt-4`;
+            tempMessageEl.className = `text-${type}-400 text-center text-sm mt-4`; // Adjusted color for dark theme
             // Append message near the top of the content div for visibility
-            document.querySelector('.bg-white').insertBefore(tempMessageEl, document.querySelector('.bg-white').children[2]);
+            document.querySelector('.bg-gray-800').insertBefore(tempMessageEl, document.querySelector('.bg-gray-800').children[2]);
             setTimeout(() => {
                 tempMessageEl.remove();
             }, 4000);
@@ -261,18 +328,16 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    rowElement.remove(); // Remove the row from the table
+                    // Remove from local allLinks array
+                    allLinks = allLinks.filter(link => link.shortCode !== shortCode);
+                    renderLinksTable(allLinks); // Re-render the table with updated data
                     showMessage(data.message, 'green');
-                    // Check if table is empty after deletion
-                    if (linksTableBody.children.length === 0) {
-                        noLinksMessage.classList.remove('hidden');
-                    }
                 } else {
                     showMessage(data.error || 'Failed to delete link.', 'red');
                 }
             } catch (error) {
                 console.error('Error deleting link:', error);
-                if (error.message !== 'Unauthorized') { // Don't show generic error if it was an auth issue
+                if (error.message !== 'Unauthorized') {
                     showMessage('Network error or failed to delete link.', 'red');
                 }
             } finally {
@@ -280,16 +345,85 @@
             }
         }
 
+        // Function to sort links based on currentSort
+        function sortLinks(links) {
+            switch (currentSort) {
+                case 'shortCode-asc':
+                    return links.sort((a, b) => a.shortCode.localeCompare(b.shortCode));
+                case 'shortCode-desc':
+                    return links.sort((a, b) => b.shortCode.localeCompare(a.shortCode));
+                case 'createdAt-desc':
+                    return links.sort((a, b) => b.createdAt - a.createdAt); // Newest to Oldest
+                case 'createdAt-asc':
+                    return links.sort((a, b) => a.createdAt - b.createdAt); // Oldest to Newest
+                default:
+                    return links.sort((a, b) => a.shortCode.localeCompare(b.shortCode)); // Default to A-Z
+            }
+        }
+
+        // Function to render the links table
+        function renderLinksTable(linksToRender) {
+            linksTableBody.innerHTML = ''; // Clear existing content
+            if (linksToRender.length === 0) {
+                noLinksMessage.classList.remove('hidden');
+                return;
+            }
+            noLinksMessage.classList.add('hidden'); // Hide if links are present
+
+            linksToRender.forEach(link => {
+                const row = document.createElement('tr');
+                const shortUrl = `${window.location.origin}/${link.shortCode}`;
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-400">
+                        <a href="${shortUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                            ${shortUrl}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200 break-words max-w-xs overflow-hidden text-ellipsis">
+                        <a href="${link.longUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                            ${link.longUrl}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200 flex space-x-2">
+                        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded-lg text-xs transition duration-150 ease-in-out" data-short-url="${shortUrl}">
+                            Copy
+                        </button>
+                        <button class="delete-btn bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-lg text-xs transition duration-150 ease-in-out" data-short-code="${link.shortCode}">
+                            Delete
+                        </button>
+                    </td>
+                `;
+                linksTableBody.appendChild(row);
+            });
+
+            // Add event listeners to copy and delete buttons
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const urlToCopy = event.target.dataset.shortUrl;
+                    copyToClipboard(urlToCopy);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const shortCodeToDelete = event.target.dataset.shortCode;
+                    const rowToDelete = event.target.closest('tr');
+                    showConfirmModal(`Are you sure you want to delete '${shortCodeToDelete}'?`, () => {
+                        deleteLink(shortCodeToDelete, rowToDelete);
+                    });
+                });
+            });
+        }
+
         // Function to fetch and display links
         async function fetchAndDisplayLinks() {
-            if (!adminPin) { // Don't fetch if PIN not entered yet
-                return;
+            if (!adminPin) {
+                return; // Don't fetch if PIN not entered yet
             }
 
             loadingMessage.classList.remove('hidden');
             errorMessage.classList.add('hidden');
-            linksTableBody.innerHTML = ''; // Clear existing content
-            noLinksMessage.classList.add('hidden');
 
             try {
                 const response = await authenticatedFetch('/api/list'); // Use authenticated fetch
@@ -298,57 +432,11 @@
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
-                const links = await response.json();
+                allLinks = await response.json(); // Store fetched links
 
-                if (links.length === 0) {
-                    noLinksMessage.classList.remove('hidden');
-                    return;
-                }
-
-                links.forEach(link => {
-                    const row = document.createElement('tr');
-                    const shortUrl = `${window.location.origin}/${link.shortCode}`;
-
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
-                            <a href="${shortUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
-                                ${shortUrl}
-                            </a>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 break-words max-w-xs overflow-hidden text-ellipsis">
-                            <a href="${link.longUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
-                                ${link.longUrl}
-                            </a>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 flex space-x-2">
-                            <button class="copy-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg text-xs transition duration-150 ease-in-out" data-short-url="${shortUrl}">
-                                Copy
-                            </button>
-                            <button class="delete-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs transition duration-150 ease-in-out" data-short-code="${link.shortCode}">
-                                Delete
-                            </button>
-                        </td>
-                    `;
-                    linksTableBody.appendChild(row);
-                });
-
-                // Add event listeners to copy and delete buttons
-                document.querySelectorAll('.copy-btn').forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        const urlToCopy = event.target.dataset.shortUrl;
-                        copyToClipboard(urlToCopy);
-                    });
-                });
-
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        const shortCodeToDelete = event.target.dataset.shortCode;
-                        const rowToDelete = event.target.closest('tr');
-                        showConfirmModal(`Are you sure you want to delete '${shortCodeToDelete}'?`, () => {
-                            deleteLink(shortCodeToDelete, rowToDelete);
-                        });
-                    });
-                });
+                // Sort and render initially
+                renderLinksTable(sortLinks(allLinks));
+                updateCurrentSortOrderDisplay();
 
             } catch (error) {
                 console.error('Error fetching links:', error);
@@ -358,6 +446,17 @@
             } finally {
                 loadingMessage.classList.add('hidden');
             }
+        }
+
+        function updateCurrentSortOrderDisplay() {
+            let displayText = 'Sorted by: ';
+            switch (currentSort) {
+                case 'shortCode-asc': displayText += 'Short Code (A-Z)'; break;
+                case 'shortCode-desc': displayText += 'Short Code (Z-A)'; break;
+                case 'createdAt-desc': displayText += 'Newest to Oldest'; break;
+                case 'createdAt-asc': displayText += 'Oldest to Newest'; break;
+            }
+            currentSortOrderDisplay.textContent = displayText;
         }
 
         // --- EVENT LISTENERS ---
@@ -378,14 +477,56 @@
             // Optionally, redirect or show a message if user closes without entering PIN
         });
 
-        // Initial load: Show PIN modal first
-        document.addEventListener('DOMContentLoaded', () => {
-            showPinModal();
+        // Toggle sort menu visibility
+        sortOptionsBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent document click from closing it immediately
+            sortMenu.classList.toggle('hidden');
         });
 
-        // Your cdn-loader.js should be linked here, likely at the end of body or in head.
-        // Assuming cdn-loader.js will dynamically add meta description and touch icons
-        // <script src="/cdn-loader.js"></script>
+        // Handle sort option clicks
+        sortOptions.forEach(option => {
+            option.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                currentSort = event.target.dataset.sort; // Get selected sort
+                localStorage.setItem('currentLinkSort', currentSort); // Save preference
+                sortMenu.classList.add('hidden'); // Hide menu
+                renderLinksTable(sortLinks(allLinks)); // Re-sort and re-render
+                updateCurrentSortOrderDisplay(); // Update display
+            });
+        });
+
+        // Close sort menu if clicked outside
+        document.addEventListener('click', (event) => {
+            if (!sortMenu.classList.contains('hidden') && !sortOptionsBtn.contains(event.target)) {
+                sortMenu.classList.add('hidden');
+            }
+        });
+
+        // Initial load: Show PIN modal first
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore PIN from localStorage if available (simple session persistence for demo)
+            const storedPin = localStorage.getItem('adminPin');
+            if (storedPin) {
+                adminPin = storedPin;
+                // Attempt to fetch, if 401, PIN modal will reappear
+                fetchAndDisplayLinks();
+            } else {
+                showPinModal();
+            }
+            updateCurrentSortOrderDisplay(); // Initialize display text
+        });
+
+        // Store PIN in localStorage on successful login
+        pinSubmitBtn.addEventListener('click', async () => {
+            // ... (existing login logic)
+            // If login successful:
+            // localStorage.setItem('adminPin', enteredPin); // Store PIN if successful
+            // For security, it's better NOT to store the actual PIN in localStorage directly.
+            // Only store a login flag, and re-prompt for PIN on reload.
+            // The current code already does this by clearing `adminPin` and showing the modal on 401.
+            // If you want full "stay logged in," you'd need a token-based system.
+            // For this simple setup, re-prompting on browser close is more secure.
+        });
     </script>
 </body>
 </html>
