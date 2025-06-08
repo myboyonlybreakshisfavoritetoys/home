@@ -3,109 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>just all about me</title>
-    <!-- Tailwind CSS for utility classes -->
+    <title>renj - My Personal Site</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter for a clean look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        // Tailwind configuration to use Inter and Cedarville Cursive fonts
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'], // Default sans-serif for body text
+                        cedarville: ['"Cedarville Cursive"', 'cursive'], // Custom font for titles
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts - Inter and Cedarville Cursive -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Cedarville+Cursive&display=swap" rel="stylesheet">
     <style>
-        /* Base styles for the body and html to prevent scrolling and set font */
-        body {
-            font-family: 'Inter', sans-serif;
+        /* Ensure no scrolling and full viewport height for main content */
+        html, body {
+            overflow: hidden; /* Prevent scrolling in all directions */
+            height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevents all scrolling */
-            height: 100vh; /* Ensures the body takes full viewport height */
-            display: flex; /* Uses flexbox for easy centering of the main video */
-            justify-content: center; /* Centers horizontally */
-            align-items: center; /* Centers vertically */
-            position: relative; /* Needed for z-index context of child elements */
-            background-color: #000; /* Fallback background color if video fails to load */
         }
 
-        html {
-            overflow: hidden; /* Ensures no scrollbars on the html element either */
+        /* Basic styling for the body */
+        body {
+            font-family: 'Inter', sans-serif; /* Fallback for body text */
+            background-color: #000; /* Solid black fallback */
+            color: #fff; /* White text by default */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            padding: 1rem;
+            position: relative; /* Needed for absolute positioning of gradient background */
+        }
+        /* Ensure specific elements use Cedarville Cursive when specified */
+        .font-cedarville-custom {
+            font-family: 'Cedarville Cursive', cursive;
         }
 
-        /* Styles for the blurred background video */
-        .background-video {
-            position: fixed; /* Positions the video relative to the viewport */
+        /* Animated Gradient Background */
+        .gradient-background {
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw; /* Takes full viewport width */
-            height: 100vh; /* Takes full viewport height */
-            object-fit: cover; /* Ensures the video covers the entire area without distortion */
-            filter: blur(10px); /* Applies a blur effect to the background video */
-            z-index: -2; /* Sends the background video behind all other content */
-            opacity: 0.7; /* Makes the background video slightly transparent */
+            width: 100%;
+            height: 100%;
+            /* Adjusted shades for a more noticeable subtle gradient */
+            background: linear-gradient(45deg, #1A1A1A, #3A3A3A, #1A1A1A, #4A4A4A); /* Made gradient more obvious */
+            background-size: 400% 400%; /* Make gradient larger than viewport */
+            animation: gradientMove 15s ease infinite; /* Animate it slowly */
+            z-index: -1; /* Place behind other content */
         }
 
-        /* Container for the main video to apply styling like rounded corners and shadow */
-        .main-video-container {
-            position: relative; /* Allows z-index to work */
-            z-index: -1; /* Positions the main video above the background video */
-            width: 80vw; /* Sets a responsive width for the main video */
-            max-width: 900px; /* Limits the maximum width of the main video on larger screens */
-            height: auto; /* Maintains the video's aspect ratio */
-            border-radius: 1rem; /* Applies rounded corners to the container */
-            overflow: hidden; /* Ensures the video inside respects the border-radius */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow for depth */
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Styles for the main video element */
-        .main-video {
-            display: block; /* Removes extra space below the video */
-            width: 100%; /* Ensures the video fills its container */
-            height: auto; /* Maintains the video's aspect ratio */
-            border-radius: 1rem; /* Applies rounded corners directly to the video element */
+        /* Glassmorphism Effect for Nav links AND Modals */
+        .glassmorphic {
+            background-color: rgba(255, 255, 255, 0.08); /* Semi-transparent white */
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Subtle white border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); /* Darker shadow */
+            backdrop-filter: blur(8px); /* Blur effect */
+            -webkit-backdrop-filter: blur(8px); /* Safari support */
+        }
+
+        /* Glassmorphism for modal content (remains as original) */
+        .modal-glassmorphic-content {
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly less transparent for readability */
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            color: #fff; /* Ensure text is white inside modals */
+        }
+        .modal-glassmorphic-content input {
+            background-color: rgba(255, 255, 255, 0.2); /* Input background within glass modal */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff; /* Input text color */
+        }
+        .modal-glassmorphic-content input::placeholder {
+            color: rgba(255, 255, 255, 0.7); /* Placeholder text color */
+        }
+
+        /* Styling for the "renj" title (retained as original, no glassmorphism text) */
+        .renj-title-glass { /* This class was in your provided code, keeping it here but its effects are overridden by text-white */
+            color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.6), /* Inner glow */
+                0 0 20px rgba(255, 255, 255, 0.4); /* Outer glow */
+        }
+
+        /* Custom responsive font size for navigation links */
+        .text-responsive-nav {
+            font-size: clamp(0.9rem, 2.5vw, 1.25rem); /* Minimum, preferred (viewport-width based), maximum font size */
         }
     </style>
 </head>
-<body>
-    <!-- Background Video Element -->
-    <video class="background-video" autoplay loop muted playsinline>
-        <source src="https://photos.renj.top/thearcherlyrics.mp4" type="video/mp4">
-        <!-- Fallback message if the browser does not support the video tag -->
-        Your browser does not support the video tag.
-    </video>
+<body class="bg-black text-white">
 
-    <!-- Main Video Container -->
-    <div class="main-video-container">
-        <!-- Main Video Element -->
-        <video class="main-video" autoplay loop playsinline>
-            <source src="https://photos.renj.top/thearcherlyrics.mp4" type="video/mp4">
-            <!-- Fallback message if the browser does not support the video tag -->
-            Your browser does not support the video tag.
-        </video>
+    <!-- Animated Gradient Background -->
+    <div class="gradient-background"></div>
+
+    <div class="flex flex-col items-center justify-center h-full w-full max-w-2xl px-4 relative z-10">
+        <!-- Main Title -->
+        <h1 class="font-cedarville-custom text-8xl md:text-9xl text-white mb-12 select-none renj-title-glass">
+            renj
+        </h1>
+
+        <!-- Navigation Links - Aligned horizontally, wrapping if needed -->
+        <nav class="flex flex-row flex-wrap justify-center gap-2 md:gap-4 w-full max-w-lg">
+            <a href="https://poems.renj.top/" target="_blank" rel="noopener noreferrer"
+               class="font-inter text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition duration-300 ease-in-out text-center whitespace-nowrap text-responsive-nav">
+                poetry
+            </a>
+            <a href="https://blog.renj.top/" target="_blank" rel="noopener noreferrer"
+               class="font-inter text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition duration-300 ease-in-out text-center whitespace-nowrap text-responsive-nav">
+                blog
+            </a>
+            <a href="https://photos.renj.top/" target="_blank" rel="noopener noreferrer"
+               class="font-inter text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition duration-300 ease-in-out text-center whitespace-nowrap text-responsive-nav">
+                photos
+            </a>
+            <a href="https://projects.renj.top/" target="_blank" rel="noopener noreferrer"
+               class="font-inter text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition duration-300 ease-in-out text-center whitespace-nowrap text-responsive-nav">
+                projects
+            </a>
+            <a href="/about.html"
+               class="font-inter text-white py-3 px-6 rounded-xl hover:bg-gray-800 transition duration-300 ease-in-out text-center whitespace-nowrap text-responsive-nav">
+                me
+            </a>
+        </nav>
+
+        <!-- Admin Panel Button & Modal -->
+        <button id="adminBtn"
+                class="mt-8 font-inter text-sm text-gray-400 hover:text-gray-200 transition-colors duration-200 focus:outline-none">
+            Admin Panel
+        </button>
+
+        <!-- Admin Login Modal -->
+        <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-[1000]">
+            <div class="modal-glassmorphic-content p-6 rounded-xl shadow-lg w-full max-w-xs text-center">
+                <h3 class="text-xl font-bold mb-4 text-white">Admin Login</h3>
+                <input type="text" id="adminUsername" placeholder="Username"
+                       class="w-full p-2 mb-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="password" id="adminPassword" placeholder="Password"
+                       class="w-full p-2 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="loginSubmitBtn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl w-full transition duration-300">
+                    Login
+                </button>
+                <p id="loginMessage" class="text-red-400 text-xs mt-2 hidden"></p>
+                <button id="closeModalBtn"
+                        class="mt-4 text-gray-400 hover:text-gray-200 text-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Admin Options Modal (after successful login) -->
+        <div id="optionsModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-[1000]">
+            <div class="modal-glassmorphic-content p-6 rounded-xl shadow-lg w-full max-w-xs text-center">
+                <h3 class="text-xl font-bold mb-4 text-white">Admin Options</h3>
+                <a href="/links/" target="_blank"
+                   class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl mb-3 transition duration-300">
+                    Link Shortener
+                </a>
+                <a href="/logs.html" target="_blank"
+                   class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition duration-300">
+                    View Link Logs
+                </a>
+                <button id="logoutBtn"
+                        class="mt-4 text-gray-400 hover:text-gray-200 text-sm">
+                    Logout
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // JavaScript to ensure videos play, especially if browser autoplay policies block them initially.
-        // It attempts to play the videos on any user interaction (click, touch, keydown).
-        document.addEventListener('DOMContentLoaded', () => {
-            const backgroundVideo = document.querySelector('.background-video');
-            const mainVideo = document.querySelector('.main-video');
+        // Admin Panel Logic
+        const adminBtn = document.getElementById('adminBtn');
+        const adminModal = document.getElementById('adminModal');
+        const adminUsernameInput = document.getElementById('adminUsername');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+        const loginMessage = document.getElementById('loginMessage');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const optionsModal = document.getElementById('optionsModal');
+        const logoutBtn = document.getElementById('logoutBtn');
 
-            // Function to attempt playing both videos
-            const playVideos = () => {
-                if (backgroundVideo.paused) {
-                    // Attempt to play the background video, catch any errors (e.g., browser blocking)
-                    backgroundVideo.play().catch(e => console.log("Background video play failed:", e));
-                }
-                if (mainVideo.paused) {
-                    // Attempt to play the main video, catch any errors
-                    mainVideo.play().catch(e => console.log("Main video play failed:", e));
-                }
-            };
-
-            // Add event listeners to the body to trigger video playback on user interaction
-            document.body.addEventListener('click', playVideos);
-            document.body.addEventListener('touchstart', playVideos);
-            document.body.addEventListener('keydown', playVideos);
-
-            // Initial attempt to play videos on page load (may be blocked by browser policies)
-            playVideos();
+        // Show Admin Login Modal
+        adminBtn.addEventListener('click', () => {
+            adminModal.classList.remove('hidden');
+            adminUsernameInput.value = '';
+            adminPasswordInput.value = '';
+            loginMessage.classList.add('hidden');
+            adminUsernameInput.focus();
         });
+
+        // Close Login Modal
+        closeModalBtn.addEventListener('click', () => {
+            adminModal.classList.add('hidden');
+        });
+
+        // Handle Login Submission
+        loginSubmitBtn.addEventListener('click', async () => {
+            const username = adminUsernameInput.value.trim();
+            const password = adminPasswordInput.value.trim();
+
+            if (!username || !password) {
+                showMessage('Please enter both username and password.', 'red', loginMessage);
+                return;
+            }
+
+            loginSubmitBtn.disabled = true;
+            showMessage('Logging in...', 'gray', loginMessage);
+
+            try {
+                // Call the Cloudflare Worker API for login
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Successful login: Store token (for demo, just a flag) and show options
+                    localStorage.setItem('adminLoggedIn', 'true'); // Simple flag
+                    adminModal.classList.add('hidden'); // Hide login modal
+                    optionsModal.classList.remove('hidden'); // Show options modal
+                } else {
+                    showMessage(data.error || 'Login failed. Please try again.', 'red', loginMessage);
+                }
+            } catch (error) {
+                console.error('Login fetch error:', error);
+                showMessage('Network error during login.', 'red', loginMessage);
+            } finally {
+                loginSubmitBtn.disabled = false;
+            }
+        });
+
+        // Logout from Admin Options
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('adminLoggedIn'); // Clear login flag
+            optionsModal.classList.add('hidden'); // Hide options modal
+            showMessage('Logged out successfully.', 'blue'); // Show a temporary message on the main page
+        });
+
+        // Initial check if already logged in (e.g., on page refresh)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                optionsModal.classList.remove('hidden'); // Show options directly
+            }
+        });
+
+        // Helper to show messages within modals
+        function showMessage(msg, type, element) {
+            element.textContent = msg;
+            element.className = `text-${type}-600 text-xs mt-2`;
+            element.classList.remove('hidden');
+            if (type !== 'red') {
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                }, 3000);
+            }
+        }
     </script>
 </body>
 </html>
