@@ -71,7 +71,7 @@
 
     <div class="flex flex-col items-center justify-center min-h-screen w-full p-4 relative z-10">
         <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-xl text-center">
-            <h1 class="text-3xl font-bold text-white mb-6">Shorten Your Link</h1>
+            <h1 class="text-2xl font-bold text-white mb-6">Shorten Your Link</h1> <!-- Changed from text-3xl to text-2xl -->
 
             <div id="messageBox" class="p-3 rounded-lg text-sm mb-4 hidden" role="alert"></div>
 
@@ -81,16 +81,16 @@
                 <input type="text" id="customShortCodeInput" placeholder="Optional: Custom short code (e.g., my-link)"
                        class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400">
                 <button type="submit" id="shortenButton"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out w-full">
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-xl transition duration-300 ease-in-out w-full"> <!-- Changed py-3 px-6 to py-2.5 px-5 -->
                     Shorten Link
                 </button>
             </form>
 
             <div id="resultBox" class="mt-6 p-4 bg-gray-700 rounded-lg hidden">
-                <p class="text-lg text-white font-medium mb-2">Your Shortened Link:</p>
+                <p class="text-base text-white font-medium mb-2">Your Shortened Link:</p> <!-- Changed from text-lg to text-base -->
                 <div class="flex flex-col md:flex-row items-center justify-center space-y-3 md:space-y-0 md:space-x-3">
                     <a id="shortenedLink" target="_blank" rel="noopener noreferrer"
-                       class="text-blue-400 hover:underline text-lg md:text-xl break-all"></a>
+                       class="text-base md:text-lg text-blue-400 hover:underline break-all"></a> <!-- Changed from text-lg md:text-xl to text-base md:text-lg -->
                     <button id="copyButton"
                             class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-4 rounded-xl transition duration-300 ease-in-out">
                         Copy
@@ -118,12 +118,10 @@
                 messageBox.classList.add('bg-red-700', 'text-red-100');
             } else if (type === 'success') {
                 messageBox.classList.add('bg-green-700', 'text-green-100');
-                // IMPORTANT: Do NOT hide resultBox when message type is 'success'
             } else { // info or default
                 messageBox.classList.add('bg-blue-700', 'text-blue-100');
             }
             messageBox.classList.remove('hidden');
-            // resultBox.classList.add('hidden'); // Removed this line which was causing the issue
         }
 
         // Function to hide the message box
@@ -190,8 +188,14 @@
                 const textToCopy = shortenedLink.textContent;
                 const tempInput = document.createElement('textarea');
                 tempInput.value = textToCopy;
+                // Position off-screen and make invisible but selectable
+                tempInput.style.position = 'absolute';
+                tempInput.style.left = '-9999px';
+                tempInput.style.top = '0';
+                tempInput.style.opacity = '0';
                 document.body.appendChild(tempInput);
-                tempInput.select();
+                tempInput.focus(); // Focus the textarea
+                tempInput.select(); // Select the text
                 document.execCommand('copy'); // Using execCommand for broader compatibility
                 document.body.removeChild(tempInput);
                 showMessage('Copied to clipboard!', 'info');
