@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>renj's cents</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://poems.renj.top/renjfavicon.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global styles to make the page non-scrollable and full height/width */
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Prevents all scrolling */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body as a flex container to stack the main content and footer vertically */
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #000; /* Ensures a black background */
+            color: white;
+            font-family: 'Inter', sans-serif;
+            align-items: center; /* Center the main content wrapper horizontally */
+            justify-content: center; /* Center the main content wrapper vertically */
+            padding: 1rem; /* Add some padding around the main content wrapper */
+        }
+
+        /* Custom font family for Inter */
+        .font-inter {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom font family for Cedarville Cursive */
+        .font-cedarville {
+            font-family: 'Cedarville Cursive', cursive;
+        }
+
+        /* Main content wrapper to control max-width and center the image and footer */
+        /* Tailwind classes are now used directly in the HTML for responsiveness */
+        .main-content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center contents vertically within this wrapper */
+            align-items: center; /* Center contents horizontally within this wrapper */
+            flex-grow: 1; /* Allow it to take available space */
+        }
+
+        /* Full-width banner container for the background image with 16:9 aspect ratio */
+        .homepage-banner-container {
+            position: relative; /* Needed for absolute positioning of child elements */
+            width: 100%; /* Ensures it spans the full width of its parent */
+            height: 0; /* Important for aspect ratio trick */
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio (9 / 16 * 100) */
+            background-image: url('https://poems.renj.top/evermore/morephotos/archive.png'); /* The background image */
+            background-size: cover; /* Ensures the image covers the entire container */
+            background-position: center; /* Centers the image within the container */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            border-radius: 8px; /* Retain corner rounding */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Retain box shadow */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+        }
+
+        /* Wrapper for the navigation and title, centered over the image */
+        .homepage-content-overlay {
+            position: absolute; /* Positions this div relative to its parent (.homepage-banner-container) */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centers content vertically */
+            align-items: center; /* Centers content horizontally */
+            text-align: center; /* Centers text within its own lines */
+            padding: 1rem; /* Adds some padding for responsiveness on smaller screens */
+            gap: 1.5rem; /* Space between nav and title, equivalent to Tailwind's space-y-6 */
+        }
+
+        /* Text shadow for better readability of text over the image */
+        .banner-text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Subtle shadow for contrast */
+        }
+
+        /* Footer styling */
+        .homepage-footer {
+            flex-shrink: 0; /* Prevents the footer from shrinking when space is limited */
+            width: 100%;
+            padding: 1rem; /* Tailwind's p-4 equivalent */
+            background-color: #000; /* Black background for the footer */
+            z-index: 20; /* Ensures footer is above other content if layers overlap */
+            display: flex;
+            justify-content: space-between; /* Pushes content to the ends */
+            align-items: flex-end; /* Aligns items to the bottom */
+            font-size: 0.75rem; /* Tailwind's text-xs equivalent */
+            line-height: 1rem;
+            margin-top: 1rem; /* Add some space between the image and the footer */
+        }
+
+        /* Responsive adjustments for navigation links */
+        @media (min-width: 768px) { /* Applies at Tailwind's 'md' breakpoint and above */
+            .homepage-nav {
+                font-size: 0.875rem; /* Tailwind's text-sm equivalent */
+                line-height: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main content wrapper to control max-width and center everything -->
+    <div class="main-content-wrapper max-w-sm sm:max-w-xl lg:max-w-2xl">
+        <!-- Main content area: the full-screen image banner -->
+        <main class="homepage-banner-container">
+            <!-- Wrapper for navigation and title, positioned and centered over the banner -->
+            <div class="homepage-content-overlay">
+                <!-- Navigation bar -->
+                <nav class="flex justify-around items-center text-white text-xs md:text-sm w-full max-w-xs homepage-nav">
+                
+                    <a href="index.html" class="hover:underline">home</a>
+                    <a href="https://poems.renj.top/">poems</a>
+                    <a href="https://poems.renj.top/" class="hover:underline">cents</a>
+                    <a href="https://open.spotify.com/user/31hmvuqvfm24fc4y5o5berr6tsji?si=0424a7276d344e21" class="hover:underline">spotify</a>
+                </nav>
+
+                <!-- Title -->
+                <div class="flex flex-col items-center">
+                    <h1 class="font-cedarville text-4xl md:text-6xl banner-text-shadow">
+                        renj
+                    </h1>
+                  <b class="font-inter text-sm md:text-base italic banner-text-shadow">lending the common hour a gilded dream</b>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer section -->
+        <footer class="homepage-footer">
+            <div class="flex space-x-4">
+                <a href="https://www.instagram.com/renjmarkell/" class="hover:underline">INSTAGRAM</a>
+                <a href="https://www.facebook.com/marklawrencecaroro" class="hover:underline">FACEBOOK</a>
+            </div>
+            <div class="text-right flex items-center space-x-2">
+                <p>sibulan, <span id="current-time"></span></p>
+                <p>&copy; 2025</p>
+                <!-- Small logo in the footer with a placeholder fallback -->
+                <img src="https://poems.renj.top/renjwhite.png"
+                    onerror="this.onerror=null; this.src='https://placehold.co/20x20/FFFFFF/000000?text=Logo';"
+                    alt="Renj Logo"
+                    class="h-5 w-auto">
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Function to update and display the current time in the footer
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero for minutes
+            const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
+            document.getElementById('current-time').textContent = timeString;
+        }
+        updateTime(); // Call the function immediately to set the initial time
+        setInterval(updateTime, 60000); // Update the time every minute (60,000 milliseconds)
+    </script>
+</body>
+</html>
