@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>thoughts | renj</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://poems.renj.top/renjfavicon.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global styles */
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-y: auto; /* Allow vertical scrolling for content */
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #000; /* Ensures a black background */
+            color: white;
+            font-family: 'Inter', sans-serif;
+            align-items: center; /* Center the main content wrapper horizontally */
+            padding: 1rem; /* Add some padding around the main content wrapper */
+        }
+
+        /* Custom font family for Inter */
+        .font-inter {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom font family for Cedarville Cursive */
+        .font-cedarville {
+            font-family: 'Cedarville Cursive', cursive;
+        }
+
+        /* Main content wrapper to control max-width and center elements */
+        .main-content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align content to the top */
+            align-items: center; /* Center contents horizontally within this wrapper */
+            flex-grow: 1; /* Allow it to take available space */
+            padding-top: 2rem; /* Add some padding at the top for content */
+        }
+
+        /* Text shadow for better readability of text over the image */
+        .banner-text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Subtle shadow for contrast */
+        }
+
+        /* Footer styling */
+        .homepage-footer {
+            flex-shrink: 0; /* Prevents the footer from shrinking when space is limited */
+            width: 100%;
+            padding: 1rem; /* Tailwind's p-4 equivalent */
+            background-color: #000; /* Black background for the footer */
+            z-index: 20; /* Ensures footer is above other content if layers overlap */
+            display: flex;
+            justify-content: space-between; /* Pushes content to the ends */
+            align-items: flex-end; /* Aligns items to the bottom */
+            font-size: 0.75rem; /* Tailwind's text-xs equivalent */
+            line-height: 1rem;
+            margin-top: 2rem; /* Add some space between the content and the footer */
+        }
+
+        /* Responsive adjustments for navigation links */
+        @media (min-width: 768px) { /* Applies at Tailwind's 'md' breakpoint and above */
+            .homepage-nav {
+                font-size: 0.875rem; /* Tailwind's text-sm equivalent */
+                line-height: 1.25rem;
+            }
+        }
+
+        /* Custom Glassmorphism style for form inputs */
+        .glass-input {
+            background-color: rgba(255, 255, 255, 0.15); /* White with low opacity */
+            backdrop-filter: blur(10px); /* Stronger blur effect */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* More visible border */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+            color: white; /* Ensure text color is white */
+        }
+        /* Placeholder color for glass inputs */
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.6); /* Lighter placeholder for better contrast */
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-inter min-h-screen flex flex-col items-center p-4">
+
+    <!-- Main content wrapper to control max-width and center everything -->
+    <div class="main-content-wrapper max-w-4xl w-full">
+        <main class="w-full flex flex-col items-center space-y-8">
+
+            <!-- Banner Container (same width as form, shorter length, includes nav) -->
+            <div class="relative w-full max-w-lg aspect-[3/1] bg-cover bg-center bg-no-repeat rounded-lg shadow-lg overflow-hidden mt-8"
+                style="background-image: url('https://placehold.co/1200x400/1a1a1a/ffffff?text=Thoughts+Banner');">
+                <!-- Navigation bar directly on top of the picture -->
+                <nav class="absolute top-4 left-0 right-0 p-4 flex justify-around items-center text-white text-xs md:text-sm homepage-nav">
+                    <a href="index.html" class="hover:underline">home</a>
+                    <a href="https://poems.renj.top/" class="hover:underline">poems</a>
+                    <a href="https://cents.renj.top/" class="hover:underline">cents</a>
+                    <a href="thoughts.html" class="hover:underline">thoughts</a>
+                    <a href="https://open.spotify.com/user/31hmvuqvfm24fc4y5o5berr6tsji?si=0424a7276d344e21" class="hover:underline">spotify</a>
+                </nav>
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
+                    <h2 class="font-cedarville text-3xl md:text-5xl banner-text-shadow">
+                        share your thoughts
+                    </h2>
+                    <p class="font-inter text-sm md:text-base banner-text-shadow mt-2">
+                        I'm all ears.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Thoughts Form Container - Now with a white outline -->
+            <div class="w-full max-w-lg mt-8 p-6 border border-white rounded-lg shadow-lg">
+                <form id="thoughtsForm" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-white mb-1">Your Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="e.g., Renj Markell"
+                            class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-200 glass-input"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label for="contact" class="block text-sm font-medium text-white mb-1">Email or Contact Number</label>
+                        <input
+                            type="text"
+                            id="contact"
+                            name="contact"
+                            placeholder="e.g., your.email@example.com or +63 9XX XXX XXXX"
+                            class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-200 glass-input"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-white mb-1">What's on your mind?</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="8"
+                            placeholder="Share your thoughts, ideas, stories, or anything you'd like to say..."
+                            class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-200 resize-y glass-input"
+                            required
+                        ></textarea>
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 shadow-lg"
+                    >
+                        Send My Thoughts
+                    </button>
+                </form>
+
+                <!-- Custom Message Box for Form Submission -->
+                <div id="messageBox" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+                    <div class="bg-gray-800 p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
+                        <h3 class="text-2xl font-bold text-white mb-4">Thank You!</h3>
+                        <p class="text-white mb-6">Your thoughts have been received. I appreciate you taking the time to share them!</p>
+                        <button id="closeMessageBox" class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-5 rounded-md transition duration-300">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer - aligns with the max-w-lg content block -->
+        <footer class="homepage-footer max-w-lg">
+            <div class="flex space-x-4">
+                <a href="https://www.instagram.com/renjmarkell/" class="hover:underline">INSTAGRAM</a>
+                <a href="https://www.facebook.com/marklawrencecaroro" class="hover:underline">FACEBOOK</a>
+            </div>
+            <div class="text-right flex items-center space-x-2">
+                <p>sibulan, <span id="current-time"></span></p>
+                <p>&copy; 2025</p>
+                <!-- Small logo in the footer with a placeholder fallback -->
+                <img src="https://poems.renj.top/renjwhite.png"
+                    onerror="this.onerror=null; this.src='https://placehold.co/20x20/FFFFFF/000000?text=Logo';"
+                    alt="Renj Logo"
+                    class="h-5 w-auto">
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Function to update and display the current time in the footer
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero for minutes
+            const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
+            document.getElementById('current-time').textContent = timeString;
+        }
+        updateTime(); // Call the function immediately to set the initial time
+        setInterval(updateTime, 60000); // Update the time every minute (60,000 milliseconds)
+
+        // --- Form Submission Logic ---
+        const thoughtsForm = document.getElementById('thoughtsForm');
+        const messageBox = document.getElementById('messageBox');
+        const closeMessageBoxBtn = document.getElementById('closeMessageBox');
+
+        thoughtsForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // In a real application, you would send this data to a backend server here.
+            // For this example, we'll just simulate success and show a message.
+            console.log('Form Submitted!');
+            console.log('Name:', document.getElementById('name').value);
+            console.log('Contact:', document.getElementById('contact').value);
+            console.log('Message:', document.getElementById('message').value);
+
+            // Show the custom message box
+            messageBox.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when message box is open
+
+            // Clear the form fields after submission
+            thoughtsForm.reset();
+        });
+
+        closeMessageBoxBtn.addEventListener('click', function() {
+            messageBox.classList.add('hidden'); // Hide the message box
+            document.body.style.overflow = ''; // Restore scrolling
+        });
+
+        // Close message box if clicking outside the content (on the overlay)
+        messageBox.addEventListener('click', function(event) {
+            if (event.target === messageBox) {
+                messageBox.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>
