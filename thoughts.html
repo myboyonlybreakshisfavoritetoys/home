@@ -102,7 +102,7 @@
 
             <!-- Banner Container (same width as form, shorter length, includes nav) -->
             <div class="relative w-full max-w-lg aspect-[3/1] bg-cover bg-center bg-no-repeat rounded-lg shadow-lg overflow-hidden mt-8"
-                style="background-image: url('https://placehold.co/1200x400/1a1a1a/ffffff?text=Thoughts+Banner');">
+                style="background-image: url('https://poems.renj.top/evermore/morephotos/manifesto.png');">
                 <!-- Navigation bar directly on top of the picture -->
                 <nav class="absolute top-4 left-0 right-0 p-4 flex justify-around items-center text-white text-xs md:text-sm homepage-nav">
                     <a href="index.html" class="hover:underline">home</a>
@@ -123,7 +123,9 @@
 
             <!-- Thoughts Form Container - Now with a white outline -->
             <div class="w-full max-w-lg mt-8 p-6 border border-white rounded-lg shadow-lg">
-                <form id="thoughtsForm" class="space-y-6">
+                <form id="thoughtsForm" action="https://formspree.io/f/mwpqryvl" method="POST" class="space-y-6">
+                    <!-- Formspree endpoint for submission -->
+                    <input type="hidden" name="_subject" value="New Thought Submission from renj.top">
                     <div>
                         <label for="name" class="block text-sm font-medium text-white mb-1">Your Name</label>
                         <input
@@ -217,20 +219,14 @@
         const closeMessageBoxBtn = document.getElementById('closeMessageBox');
 
         thoughtsForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            // In a real application, you would send this data to a backend server here.
-            // For this example, we'll just simulate success and show a message.
-            console.log('Form Submitted!');
-            console.log('Name:', document.getElementById('name').value);
-            console.log('Contact:', document.getElementById('contact').value);
-            console.log('Message:', document.getElementById('message').value);
+            // Formspree handles the actual submission, so we don't prevent default here.
+            // The pop-up will still show after the form is submitted.
 
             // Show the custom message box
             messageBox.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent scrolling when message box is open
 
-            // Clear the form fields after submission
+            // Clear the form fields after submission (this happens after Formspree processes)
             thoughtsForm.reset();
         });
 
