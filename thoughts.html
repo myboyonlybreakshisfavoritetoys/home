@@ -25,70 +25,65 @@
             color: white;
             font-family: 'Inter', sans-serif;
             align-items: center;
-            padding: 1rem; 
+            padding: 1rem;
         }
 
         .font-inter {
             font-family: 'Inter', sans-serif;
         }
-       
+        
         .font-cedarville {
             font-family: 'Cedarville Cursive', cursive;
         }
 
-       
+        
         .main-content-wrapper {
             width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; 
-            align-items: center; 
+            justify-content: flex-start;
+            align-items: center;
             flex-grow: 1;
-            padding-top: 2rem; 
+            padding-top: 2rem;
         }
 
       
         .banner-text-shadow {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Subtle shadow for contrast */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
 
-        /* Footer styling */
         .homepage-footer {
-            flex-shrink: 0; /* Prevents the footer from shrinking when space is limited */
+            flex-shrink: 0;
             width: 100%;
-            padding: 1rem; /* Tailwind's p-4 equivalent */
-            background-color: #000; /* Black background for the footer */
-            z-index: 20; /* Ensures footer is above other content if layers overlap */
+            padding: 1rem;
+            background-color: #000;
+            z-index: 20;
             display: flex;
-            justify-content: space-between; /* Pushes content to the ends */
-            align-items: flex-end; /* Aligns items to the bottom */
-            font-size: 0.75rem; /* Tailwind's text-xs equivalent */
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.75rem;
             line-height: 1rem;
-            margin-top: 2rem; /* Add some space between the content and the footer */
+            margin-top: 2rem;
         }
 
-        /* Responsive adjustments for navigation links */
-        @media (min-width: 768px) { /* Applies at Tailwind's 'md' breakpoint and above */
+        @media (min-width: 768px) {
             .homepage-nav {
-                font-size: 0.875rem; /* Tailwind's text-sm equivalent */
+                font-size: 0.875rem;
                 line-height: 1.25rem;
             }
         }
 
-        /* Custom Glassmorphism style for form inputs */
         .glass-input {
-            background-color: rgba(255, 255, 255, 0.15); /* White with low opacity */
-            backdrop-filter: blur(10px); /* Stronger blur effect */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* More visible border */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* More prominent shadow */
-            color: white; /* Ensure text color is white */
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            color: white;
         }
-        /* Placeholder color for glass inputs */
         .glass-input::placeholder {
-            color: rgba(255, 255, 255, 0.6); /* Lighter placeholder for better contrast */
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        /* Custom switch styling */
         .toggle-switch {
             position: relative;
             display: inline-block;
@@ -145,14 +140,11 @@
 </head>
 <body class="bg-black text-white font-inter min-h-screen flex flex-col items-center p-4">
 
-    <!-- Main content wrapper to control max-width and center everything -->
     <div class="main-content-wrapper max-w-4xl w-full">
         <main class="w-full flex flex-col items-center space-y-8">
 
-            <!-- Banner Container (same width as form, shorter length, includes nav) -->
             <div class="relative w-full max-w-lg aspect-[3/1] bg-cover bg-center bg-no-repeat rounded-lg shadow-lg overflow-hidden mt-8"
                 style="background-image: url('https://poems.renj.top/evermore/morephotos/manifesto.png');">
-                <!-- Navigation bar directly on top of the picture -->
                 <nav class="absolute top-4 left-0 right-0 p-4 flex justify-around items-center text-white text-xs md:text-sm homepage-nav">
                     <a href="index.html" class="hover:underline">home</a>
                     <a href="https://poems.renj.top/" class="hover:underline">poems</a>
@@ -170,10 +162,7 @@
                 </div>
             </div>
 
-            <!-- Thoughts Form Container - Now with a white outline -->
-            <!-- This div is now relative to position the toggle outside the form but within this box -->
             <div class="w-full max-w-lg mt-8 p-6 border border-white rounded-lg shadow-lg relative">
-                <!-- Anonymous Toggle Switch - Positioned absolutely outside the form but inside this container -->
                 <div class="absolute top-6 right-6 z-10 flex items-center">
                     <label for="anonymousToggle" class="text-sm font-medium text-white mr-2 whitespace-nowrap">Stay Anonymous</label>
                     <label class="toggle-switch">
@@ -183,10 +172,8 @@
                 </div>
 
                 <form id="thoughtsForm" action="https://formspree.io/f/mwpqryvl" method="POST" class="space-y-6">
-                    <!-- Formspree endpoint for submission -->
                     <input type="hidden" name="_subject" value="New Thought Submission from renj.top">
 
-                    <!-- No pt-16 needed here anymore as toggle is outside this flow -->
                     <div id="identifiableFields" class="space-y-6">
                         <div>
                             <label for="name" class="block text-sm font-medium text-white mb-1">Your Name</label>
@@ -230,7 +217,6 @@
                     </button>
                 </form>
 
-                <!-- Custom Message Box for Form Submission -->
                 <div id="messageBox" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
                     <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
                         <h3 class="text-2xl font-bold text-black mb-4">Thank You!</h3>
@@ -243,7 +229,6 @@
             </div>
         </main>
 
-        <!-- Footer - aligns with the max-w-lg content block -->
         <footer class="homepage-footer max-w-lg">
             <div class="flex space-x-4">
                 <a href="https://www.instagram.com/renjmarkell/" class="hover:underline">INSTAGRAM</a>
@@ -252,7 +237,6 @@
             <div class="text-right flex items-center space-x-2">
                 <p>sibulan, <span id="current-time"></span></p>
                 <p>&copy; 2025</p>
-                <!-- Small logo in the footer with a placeholder fallback -->
                 <img src="https://poems.renj.top/renjwhite.png"
                     onerror="this.onerror=null; this.src='https://placehold.co/20x20/FFFFFF/000000?text=Logo';"
                     alt="Renj Logo"
@@ -262,102 +246,84 @@
     </div>
 
     <script>
-        // Function to update and display the current time in the footer
         function updateTime() {
             const now = new Date();
             const hours = now.getHours();
             const minutes = now.getMinutes();
             const ampm = hours >= 12 ? 'PM' : 'AM';
-            const formattedHours = hours % 12 || 12; // Convert to 12-hour format
-            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero for minutes
+            const formattedHours = hours % 12 || 12;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
             const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
             document.getElementById('current-time').textContent = timeString;
         }
-        updateTime(); // Call the function immediately to set the initial time
-        setInterval(updateTime, 60000); // Update the time every minute (60,000 milliseconds)
+        updateTime();
+        setInterval(updateTime, 60000);
 
-        // --- Form Submission Logic ---
         const thoughtsForm = document.getElementById('thoughtsForm');
         const messageBox = document.getElementById('messageBox');
         const closeMessageBoxBtn = document.getElementById('closeMessageBox');
 
-        // Anonymous Toggle Logic
         const anonymousToggle = document.getElementById('anonymousToggle');
         const nameInput = document.getElementById('name');
         const contactInput = document.getElementById('contact');
 
         anonymousToggle.addEventListener('change', function() {
             if (this.checked) {
-                // Store original values before disabling
                 nameInput.dataset.originalValue = nameInput.value;
                 contactInput.dataset.originalValue = contactInput.value;
 
-                // If checked, disable fields and set anonymous values
                 nameInput.value = 'anonymous';
                 contactInput.value = 'nothing to see here';
                 nameInput.disabled = true;
                 contactInput.disabled = true;
-                // Add a class to dim or visually indicate disabled state
                 nameInput.classList.add('opacity-50', 'cursor-not-allowed');
                 contactInput.classList.add('opacity-50', 'cursor-not-allowed');
-                nameInput.required = false; // Make non-required when anonymous
-                contactInput.required = false; // Make non-required when anonymous
+                nameInput.required = false;
+                contactInput.required = false;
             } else {
-                // If unchecked, enable fields and restore original values or clear if none
                 nameInput.value = nameInput.dataset.originalValue || '';
                 contactInput.value = contactInput.dataset.originalValue || '';
                 nameInput.disabled = false;
                 contactInput.disabled = false;
-                // Remove visual indicators
                 nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
                 contactInput.classList.remove('opacity-50', 'cursor-not-allowed');
-                nameInput.required = true; // Re-enable required when not anonymous
-                contactInput.required = true; // Re-enable required when not anonymous
+                nameInput.required = true;
+                contactInput.required = true;
             }
         });
 
 
         thoughtsForm.addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent the default form submission (page reload)
+            event.preventDefault();
 
-            // Show the custom message box immediately
             messageBox.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when message box is open
+            document.body.style.overflow = 'hidden';
 
-            // Collect form data
             const formData = new FormData(this);
 
             try {
-                // Send data to Formspree using fetch API
                 const response = await fetch(this.action, {
                     method: this.method,
                     body: formData,
                     headers: {
-                        'Accept': 'application/json' // Important for Formspree to return JSON
+                        'Accept': 'application/json'
                     }
                 });
 
                 if (response.ok) {
                     console.log('Form submitted successfully to Formspree!');
-                    // You can add more success handling here if needed
                 } else {
                     console.error('Form submission failed:', response.statusText);
-                    // Handle errors (e.g., show an error message in the pop-up)
                 }
             } catch (error) {
                 console.error('Network error during form submission:', error);
-                // Handle network errors
             }
 
-            // Clear the form fields after submission attempt (regardless of success for UX)
-            // If anonymous, keep the anonymous values, otherwise reset to empty
             if (!anonymousToggle.checked) {
                 this.reset();
             } else {
-                // Ensure name and contact fields revert to anonymous values
                 nameInput.value = 'anonymous';
                 contactInput.value = 'nothing to see here';
-                // Also ensure they remain disabled and required=false if the toggle is still checked
                 nameInput.disabled = true;
                 contactInput.disabled = true;
                 nameInput.required = false;
@@ -366,11 +332,10 @@
         });
 
         closeMessageBoxBtn.addEventListener('click', function() {
-            messageBox.classList.add('hidden'); // Hide the message box
-            document.body.style.overflow = ''; // Restore scrolling
+            messageBox.classList.add('hidden');
+            document.body.style.overflow = '';
         });
 
-        // Close message box if clicking outside the content (on the overlay)
         messageBox.addEventListener('click', function(event) {
             if (event.target === messageBox) {
                 messageBox.classList.add('hidden');
