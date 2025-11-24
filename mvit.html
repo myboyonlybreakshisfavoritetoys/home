@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Most Viable Triangle Function (mvit)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for Inter font and custom styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-dark': '#111827',
+                        'secondary-dark': '#1f2937',
+                        'accent': '#60a5fa', // Blue for buttons/highlights
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles to ensure the page takes up full height and centers content */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+        /* Style for the fixed-width content area */
+        .content-container {
+            max-width: 600px;
+            width: 95%; /* Responsive width */
+            background-color: theme('colors.primary-dark');
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="font-sans text-white">
+
+    <div class="content-container p-6 sm:p-10 rounded-xl">
+        <h1 class="text-3xl font-bold text-center mb-4 text-accent">
+            The Most Viable Triangle Function (mvit)
+        </h1>
+
+        <!-- Definition Section -->
+        <div class="mb-8 border-b border-gray-700 pb-4">
+            <h2 class="text-xl font-semibold mb-2">Definition:</h2>
+            <p class="text-gray-300 mb-4 text-sm">
+                The <b>mvit(A)</b> function takes an angle A (where 0&deg; &lt; A &lt; 180&deg;) and returns the angles and unit-inradius side lengths of the unique isosceles triangle that contains A as its apex angle. This triangle represents the optimal shape for maximizing the Area-to-Perimeter ratio.
+            </p>
+
+            <div class="text-sm font-mono text-center bg-secondary-dark p-3 rounded-lg border border-gray-600">
+                <p class="mb-1">Angles: (A, B, C) where B = C = (180&deg; - A) / 2</p>
+                <p class="mb-1">Side a (opposite A): a = 2 &middot; tan(A / 2) (Inradius r=1)</p>
+                <p>Sides b and c (equal sides): b = c = 1 / cos(A / 2) (Inradius r=1)</p>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="flex flex-col items-center mb-8">
+            <label for="angleInput" class="text-lg font-medium mb-3">
+                Calculate:
+            </label>
+            <div class="flex items-center space-x-2 w-full max-w-sm">
+                <span class="text-2xl font-bold">mvit (</span>
+                <input type="number" id="angleInput" placeholder="Angle A in degrees (e.g., 72)"
+                       class="flex-grow p-3 bg-secondary-dark text-white rounded-lg border border-gray-600 focus:ring-accent focus:border-accent"
+                       min="0.01" max="179.99" step="0.01">
+                <span class="text-2xl font-bold">)</span>
+            </div>
+            <button onclick="handleCalculation()"
+                    class="mt-4 w-full max-w-xs bg-accent hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-md shadow-blue-700/50">
+                Calculate MVIT
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="bg-secondary-dark p-6 rounded-xl border border-gray-700 min-h-32">
+            <h2 class="text-xl font-semibold mb-4 text-accent">Results</h2>
+            <p id="message" class="text-gray-400">Enter an angle to calculate the Most Viable Triangle.</p>
+            
+            <div id="outputDetails" class="hidden">
+                <p class="mt-2 text-lg">
+                    <span class="font-bold">Angles (A, B, C):</span> <span id="outputAngles" class="text-green-400"></span>
+                </p>
+                <p class="mt-2 text-lg">
+                    <span class="font-bold">Side a:</span> <span id="outputSideA" class="text-green-400"></span>
+                </p>
+                <p class="mt-2 text-lg">
+                    <span class="font-bold">Sides b and c:</span> <span id="outputSideBC" class="text-green-400"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use a function to convert degrees to radians
+        const toRadians = (degrees) => degrees * (Math.PI / 180);
+
+        /**
+         * @brief Calculates the MVIT angles and side lengths for a given angle A.
+         * The side lengths are normalized for a unit inradius (r=1).
+         */
+        function calculateMvit(A) {
+            // 1. Validation check
+            if (A <= 0 || A >= 180) {
+                return { error: `Input angle A must be between 0° and 180°. (${A}° is invalid.)` };
+            }
+
+            // Convert A to radians for trigonometric functions
+            const A_rad = toRadians(A);
+            const A_half_rad = toRadians(A / 2);
+
+            // 2. Calculate Angles
+            const B = (180 - A) / 2;
+            
+            // 3. Calculate Side Lengths (r=1 scale)
+            // Side a (opposite A): a = 2 * tan(A/2)
+            const a = 2 * Math.tan(A_half_rad);
+            
+            // Sides b and c (opposite B and C): b = c = 1 / cos(A/2)
+            const b = 1 / Math.cos(A_half_rad);
+
+            return {
+                angles: { A, B, C: B },
+                sides: { a, b, c: b }
+            };
+        }
+
+        /**
+         * @brief Handles the button click, retrieves input, and displays results.
+         */
+        function handleCalculation() {
+            const inputElement = document.getElementById('angleInput');
+            const resultsDiv = document.getElementById('results');
+            const messageP = document.getElementById('message');
+            const outputDetailsDiv = document.getElementById('outputDetails');
+            
+            const angleA = parseFloat(inputElement.value);
+
+            // Reset UI state
+            messageP.classList.remove('text-red-400', 'text-gray-400');
+            outputDetailsDiv.classList.add('hidden');
+            messageP.textContent = '';
+            
+            if (isNaN(angleA)) {
+                messageP.textContent = "Please enter a valid number for the angle.";
+                messageP.classList.add('text-red-400');
+                return;
+            }
+
+            const result = calculateMvit(angleA);
+
+            if (result.error) {
+                messageP.textContent = result.error;
+                messageP.classList.add('text-red-400');
+                messageP.classList.remove('hidden');
+                outputDetailsDiv.classList.add('hidden');
+            } else {
+                // Success: Display results
+                document.getElementById('outputAngles').textContent = 
+                    `(${result.angles.A.toFixed(2)}°, ${result.angles.B.toFixed(2)}°, ${result.angles.C.toFixed(2)}°)`;
+                
+                document.getElementById('outputSideA').textContent = 
+                    `${result.sides.a.toFixed(4)}`;
+
+                document.getElementById('outputSideBC').textContent = 
+                    `${result.sides.b.toFixed(4)}`;
+
+                messageP.classList.add('hidden');
+                outputDetailsDiv.classList.remove('hidden');
+                resultsDiv.scrollTop = resultsDiv.scrollHeight; // Scroll to bottom of results
+            }
+        }
+    </script>
+
+</body>
+</html>
