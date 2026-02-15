@@ -2,26 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>GitHub Flipbook Test</title>
+    <title>Proprietary Zine Reader</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/dflip@1.0.0/css/dflip.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/dflip@1.0.0/css/themify-icons.min.css" rel="stylesheet" type="text/css">
 
     <style>
-        body { background-color: #222; margin: 0; }
-        #container { width: 100%; height: 95vh; padding-top: 20px; }
+        body { background-color: #1a1a1a; margin: 0; overflow: hidden; }
+        #container { width: 100%; height: 100vh; }
+
+        /* SECURITY SHIELD: Prevents right-click on the book area */
+        #container {
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            -khtml-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none;
+        }
     </style>
 </head>
-<body>
-
-    <div id="container">
+<body oncontextmenu="return false;"> <div id="container">
         <div class="_df_book" 
              height="100%" 
              webgl="true" 
-             backgroundcolor="#222"
+             backgroundcolor="#1a1a1a"
+             disabledownload="true"
+             disableprint="true"
              source="https://cents.renj.top/Group%205%20-%20COMM10%20I%20Finals.pdf" 
-             id="test_flipbook">
+             id="secure_zine_reader">
         </div>
     </div>
 
