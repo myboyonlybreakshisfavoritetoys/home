@@ -19,13 +19,21 @@ void sinkObject(int N, int M, int grid[N][M], int r, int c) {
 int main() {
     int N, M;
 
-    if (scanf("%d %d", &N, &M) != 2) return 1;
+    printf("Enter N and M (rows and columns): ");
+    if (scanf("%d %d", &N, &M) != 2) {
+        printf("Invalid input for N and M.\n");
+        return 1;
+    }
 
     int grid[N][M];
 
+    printf("Enter the %d x %d grid (0s and 1s):\n", N, M);
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < M; j++) {
-            scanf("%d", &grid[i][j]);
+            if (scanf("%d", &grid[i][j]) != 1) {
+                printf("Error reading grid at row %d, col %d.\n", i, j);
+                return 1;
+            }
         }
     }
 
@@ -40,7 +48,7 @@ int main() {
         }
     }
 
-    printf("%d\n", objectCount);
+    printf("\nTotal number of objects: %d\n", objectCount);
 
     return 0;
 }
