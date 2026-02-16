@@ -1,54 +1,48 @@
 #include <stdio.h>
 
-void sinkObject(int N, int M, int grid[N][M], int r, int c) {
-    if (r < 0 || r >= N || c < 0 || c >= M || grid[r][c] == 0) {
+void objecter(int n, int m, int grid[n][m], int row, int col) {
+    if (row < 0 || row >= n || col < 0 || col >= m || grid[row][col] == 0) {
         return;
     }
 
-    grid[r][c] = 0;
+    grid[row][col] = 0;
 
-    for (int dr = -1; dr <= 1; dr++) {
-        for (int dc = -1; dc <= 1; dc++) {
-            if (dr != 0 || dc != 0) {
-                sinkObject(N, M, grid, r + dr, c + dc);
+    for (int rowcheck = -1; rowcheck <= 1; rowcheck++) {
+        for (int colcheck = -1; colcheck <= 1; colcheck++) {
+            if (rowcheck != 0 || colcheck != 0) {
+                objecter(n, m, grid, row + rowcheck, col + colcheck);
             }
         }
     }
 }
 
 int main() {
-    int N, M;
+    int n, m, i ,j;
 
-    printf("Enter N and M (rows and columns): ");
-    if (scanf("%d %d", &N, &M) != 2) {
-        printf("Invalid input for N and M.\n");
-        return 1;
+
+    scanf("%d %d", &n, &m);
+   
+
+    int grid[n][m];
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++)
+            scanf("%d", &grid[i][j]);
+
     }
 
-    int grid[N][M];
+    int count = 0;
 
-    printf("Enter the %d x %d grid (0s and 1s):\n", N, M);
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < M; j++) {
-            if (scanf("%d", &grid[i][j]) != 1) {
-                printf("Error reading grid at row %d, col %d.\n", i, j);
-                return 1;
-            }
-        }
-    }
-
-    int objectCount = 0;
-
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < M; j++) {
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
             if (grid[i][j] == 1) {
-                objectCount++;
-                sinkObject(N, M, grid, i, j);
+                count++;
+                objecter(n, m, grid, i, j);
             }
         }
     }
 
-    printf("\nTotal number of objects: %d\n", objectCount);
+    printf("%d", count);
 
     return 0;
 }
