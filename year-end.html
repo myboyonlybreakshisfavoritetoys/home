@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Loosened so YouTube can actually see the embedding origin (fixes error 153) -->
+    <meta name="referrer" content="origin-when-cross-origin">
+    <title>chronicles — renj's archives</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="renjfavicon.png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts Import (Inter & Cedarville Cursive) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+        <style>
+        .font-inter { font-family: 'Inter', sans-serif; }
+        .font-cedarville { font-family: 'Cedarville Cursive', cursive; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseSlow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        
+        .animate-fade-in { animation: fadeIn 1s ease-out forwards; }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+        .animate-pulse-slow { animation: pulseSlow 3s infinite ease-in-out; }
+
+        /* Scrollbar aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f1f23;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2e2e33;
+        }
+    </style>
+</head>
+<body class="bg-black text-zinc-100 font-inter min-h-screen flex flex-col justify-between p-4 md:p-8">
+
+    <div class="max-w-6xl w-full mx-auto flex flex-col space-y-8 my-auto">
+        
+        <!-- Minimal Unified Navigation Header (Documents Link Removed) -->
+        <header class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-zinc-950 pb-6 animate-fade-in">
+            <div class="flex items-center space-x-3">
+                <div class="border border-white/20 px-2.5 py-1 text-xs tracking-widest font-bold bg-zinc-950 rounded select-none">
+                    RENJ
+                </div>
+                <span class="text-xs text-zinc-600 tracking-widest uppercase">annual visual archives</span>
+            </div>
+            
+            <nav class="flex space-x-8 text-xs md:text-sm tracking-widest text-zinc-400">
+                <a href="https://renj.top" class="hover:text-white transition-colors duration-300">home</a>
+                <a href="https://poems.renj.top" class="hover:text-white transition-colors duration-300">poems</a>
+                <a href="https://cents.renj.top" class="hover:text-white transition-colors duration-300">cents</a>
+            </nav>
+        </header>
+
+        <!-- Page Introduction Title -->
+        <div class="animate-fade-in-up">
+            <h1 class="font-cedarville text-5xl md:text-6xl text-white">
+                the year-end runs
+            </h1>
+            <p class="text-xs text-zinc-500 tracking-widest uppercase mt-2">
+                curated video memoirs / tracklist entries / 2021 — 2026 chronological diary
+            </p>
+        </div>
+
+        <!-- Main Video Grid/Theater & Timeline Layout -->
+        <main class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
+            
+            <!-- Left Side: Interactive Screen & Narrative (7 Cols) -->
+            <div class="col-span-1 lg:col-span-7 space-y-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+                
+                <!-- Main Screen Container -->
+                <div class="relative w-full aspect-video bg-zinc-950 rounded-xl overflow-hidden border border-zinc-900 group shadow-2xl">
+                    <!-- Static Embeds Rendered Directly on Load to Safeguard Referrer Policies -->
+                    <div id="video-frame-container" class="w-full h-full relative">
+                        
+                        <!-- 2025 Player Embed -->
+                        <iframe id="embed-2025" 
+                                class="video-player-frame w-full h-full hidden" 
+                                src="https://www.youtube.com/embed/6idWVdGPKPM?rel=0&autoplay=0&modestbranding=1&enablejsapi=1&origin=https://renj.top" 
+                                title="A 2025 So Romantic" 
+                                frameborder="0" 
+                                referrerpolicy="origin-when-cross-origin"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                        </iframe>
+
+                        <!-- 2024 Player Embed -->
+                        <iframe id="embed-2024" 
+                                class="video-player-frame w-full h-full hidden" 
+                                src="https://www.youtube.com/embed/1Ae5iSxs0SQ?rel=0&autoplay=0&modestbranding=1&enablejsapi=1&origin=https://renj.top" 
+                                title="The 2024 Run" 
+                                frameborder="0" 
+                                referrerpolicy="origin-when-cross-origin"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                        </iframe>
+
+                        <!-- 2023 Player Embed -->
+                        <iframe id="embed-2023" 
+                                class="video-player-frame w-full h-full hidden" 
+                                src="https://www.youtube.com/embed/NK7Kcgs8Lqw?rel=0&autoplay=0&modestbranding=1&enablejsapi=1&origin=https://renj.top" 
+                                title="lorenj: 2023" 
+                                frameborder="0" 
+                                referrerpolicy="origin-when-cross-origin"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                        </iframe>
+
+                        <!-- 2022 Player Embed -->
+                        <iframe id="embed-2022" 
+                                class="video-player-frame w-full h-full hidden" 
+                                src="https://www.youtube.com/embed/n_1Av12RoxE?rel=0&autoplay=0&modestbranding=1&enablejsapi=1&origin=https://renj.top" 
+                                title="Renj's 2022" 
+                                frameborder="0" 
+                                referrerpolicy="origin-when-cross-origin"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                        </iframe>
+
+                        <!-- 2021 Player Embed -->
+                        <iframe id="embed-2021" 
+                                class="video-player-frame w-full h-full hidden" 
+                                src="https://www.youtube.com/embed/NbhW-cxIEWo?rel=0&autoplay=0&modestbranding=1&enablejsapi=1&origin=https://renj.top" 
+                                title="2021 ni markl" 
+                                frameborder="0" 
+                                referrerpolicy="origin-when-cross-origin"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen>
+                        </iframe>
+
+                        <!-- 2026 Production Live Status Screen -->
+                        <div id="embed-2026" class="video-player-frame w-full h-full hidden flex flex-col items-center justify-center bg-zinc-950 p-6 text-center select-none space-y-3">
+                            <svg class="w-10 h-10 text-zinc-800 animate-spin" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24" style="animation-duration: 4s;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                            <p class="text-xs font-mono tracking-widest text-zinc-500 uppercase">SYSTEM DIAGNOSTIC: 2026 IN PROGRESS</p>
+                            <p class="text-[11px] text-zinc-600 max-w-xs leading-relaxed">Memory sequence compiling daily. Final draft master renders scheduled for publication at the end of the current solar track.</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Custom Visual Cinematic Borders Overlay -->
+                    <div class="pointer-events-none absolute inset-0 border border-white/5 rounded-xl"></div>
+                </div>
+
+                <!-- Active Video Detailed Panel -->
+                <div id="active-track-details" class="bg-zinc-950/40 border border-zinc-950 rounded-xl p-6 space-y-4">
+                    <!-- Dynamic Title, Soundtrack, and Narrative injected here -->
+                </div>
+
+            </div>
+
+            <!-- Right Side: Chronological Tracklist Navigation (5 Cols) -->
+            <div class="col-span-1 lg:col-span-5 space-y-4 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <div class="flex items-center justify-between border-b border-zinc-950 pb-3">
+                    <span class="text-xs font-mono text-zinc-500 tracking-widest uppercase">Chronological Records</span>
+                    <span class="text-xs font-mono text-zinc-600">5 completed / 1 in progress</span>
+                </div>
+
+                <!-- Interactive Track Items List -->
+                <div id="timeline-playlist" class="flex flex-col space-y-3">
+                    <!-- Dynamic timeline items loaded by Javascript -->
+                </div>
+
+                <!-- Quick Help Tip -->
+                <div class="p-4 bg-zinc-950/20 border border-zinc-950 rounded-lg text-center">
+                    <p class="text-[11px] text-zinc-600 leading-relaxed font-mono">
+                        Click on a yearly record track to display its static layout. Pre-rendered structure prevents video player errors.
+                    </p>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Footer Navigation and Location Details -->
+        <footer class="w-full flex justify-between items-end text-xs md:text-sm pt-8 border-t border-zinc-950 animate-fade-in">
+            <div class="flex space-x-4">
+                <a href="https://www.instagram.com/renjpoems_hq/" target="_blank" rel="noopener noreferrer" class="hover:underline text-zinc-500 hover:text-zinc-200 transition-colors">INSTAGRAM</a>
+                <a href="https://web.facebook.com/renjcreatives" target="_blank" rel="noopener noreferrer" class="hover:underline text-zinc-500 hover:text-zinc-200 transition-colors">FACEBOOK</a>
+            </div>
+            <div class="text-right flex items-center space-x-2 text-zinc-500">
+                <p>sibulan, <span id="current-time"></span></p>
+                <p>&copy; 2026</p>
+                <img src="renjwhite.png" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/20x20/FFFFFF/000000?text=Logo';" 
+                     alt="Renj Logo" 
+                     class="h-5 w-auto filter invert brightness-100">
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // Real-Time Time Tracker (Sibulan / Philippine Standard)
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('current-time').textContent = `${formattedHours}:${formattedMinutes} ${ampm}`;
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // The origin of this site — must match wherever this page is actually served from.
+        // If you serve this from a different domain/subdomain, update this constant to match.
+        const SITE_ORIGIN = "https://renj.top";
+
+        // DATABASE: The Chronology of Year-End Memories
+        const CHRONOLOGY_LIBRARY = [
+            {
+                year: "2026",
+                title: "The 2026 Run",
+                song: "To be determined at December's end...",
+                youtubeId: "", // Empty indicates pending production status
+                aspectRatio: "Cinematic Scope",
+                note: "Currently capturing days, sequences, and snapshots in real-time. This catalog placeholder will automatically activate with the final compilation when the clock strikes midnight on December 31, 2026.",
+                tagline: "Unfolding daily...",
+                inProgress: true
+            },
+            {
+                year: "2025",
+                title: "A 2025 So Romantic",
+                song: "New Romantics (Taylor's Version)",
+                youtubeId: "6idWVdGPKPM",
+                aspectRatio: "16:9 Widescreen",
+                note: "A bright, fast-paced, high-energy chronicle capturing raw youth and cinematic summer transitions. Cut to the soaring beats of Swift's ultimate pop anthem, celebrating new beginnings, late-night skylines, and genuine romanticism.",
+                tagline: "The rumors are terrible and cruel, but honey, most of them are true.",
+                inProgress: false
+            },
+            {
+                year: "2024",
+                title: "The 2024 Run",
+                song: "The Bolter // The Tortured Poets Department",
+                youtubeId: "1Ae5iSxs0SQ",
+                aspectRatio: "16:9 Cinematic Dark",
+                note: "Deeply atmospheric and swift. Reflecting a year of fast moves, critical transitions, and escaping the ordinary. This edit embraces a structured storytelling approach inspired by the literary, somber lyrics of the Tortured Poets era.",
+                tagline: "He was a bolter, cold as stone, but she was curious.",
+                inProgress: false
+            },
+            {
+                year: "2023",
+                title: "lorenj: 2023",
+                song: "Change (Taylor's Version)",
+                youtubeId: "NK7Kcgs8Lqw",
+                aspectRatio: "Letterboxed",
+                note: "Marking a pivotal turning point of triumph, endurance, and transformation. An emotional yearbook cut dedicated to the collaborative milestones and hurdles that were overcome step-by-step.",
+                tagline: "These walls that they put up to hold us back will fall down.",
+                inProgress: false
+            },
+            {
+                year: "2022",
+                title: "Renj's 2022",
+                song: "You're On Your Own, Kid",
+                youtubeId: "n_1Av12RoxE",
+                aspectRatio: "Standard HD",
+                note: "An intimate, retrospective portrait centered around independence, self-actualization, and stepping forward alone. Framed against the melancholic rise of Midnights, it charts milestones, friendship bracelets, and self-discovery.",
+                tagline: "You're on your own, kid. You always have been.",
+                inProgress: false
+            },
+            {
+                year: "2021",
+                title: "2021 ni markl",
+                song: "The Lucky One (Taylor's Version)",
+                youtubeId: "NbhW-cxIEWo",
+                aspectRatio: "Retro Classic",
+                note: "The original installment. A grainy, nostalgic look back at navigating fame in your own circle, counting blessings, and realizing what counts when the bright lights fade.",
+                tagline: "And they tell you that you're lucky, but you're so confused.",
+                inProgress: false
+            }
+        ];
+
+        let selectedYear = "2025"; // Default view loads the most recently completed video
+
+        function renderTimeline() {
+            const container = document.getElementById("timeline-playlist");
+            
+            container.innerHTML = CHRONOLOGY_LIBRARY.map(item => {
+                const isSelected = selectedYear === item.year;
+                
+                // Track Status Badges
+                let statusBadge = "";
+                if (item.inProgress) {
+                    statusBadge = `<span class="text-[9px] font-mono border border-zinc-800 text-zinc-500 bg-zinc-950 px-2 py-0.5 rounded animate-pulse-slow">IN PRODUCTION</span>`;
+                } else {
+                    statusBadge = `<span class="text-[9px] font-mono border border-zinc-800 text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded">COMPLETED</span>`;
+                }
+
+                // Selection borders
+                const selectStyle = isSelected 
+                    ? "border-white bg-zinc-950" 
+                    : "border-zinc-900 bg-black/40 hover:border-zinc-800 hover:bg-zinc-950/20";
+
+                return `
+                    <div onclick="selectYearRecord('${item.year}')" 
+                         class="group p-4 border rounded-xl cursor-pointer transition-all duration-300 flex items-center justify-between ${selectStyle}">
+                        <div class="flex items-center space-x-4">
+                            <!-- Visual Track Counter -->
+                            <div class="text-xs font-mono ${isSelected ? 'text-white font-bold' : 'text-zinc-600 group-hover:text-zinc-400'} transition-colors">
+                                ${item.year}
+                            </div>
+                            
+                            <!-- Track Details -->
+                            <div class="flex flex-col">
+                                <span class="text-sm font-light ${isSelected ? 'text-white' : 'text-zinc-300 group-hover:text-white'} transition-colors">${item.title}</span>
+                                <span class="text-[11px] text-zinc-500 font-mono mt-0.5 truncate max-w-[180px] sm:max-w-[280px]">Theme: ${item.song}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            ${statusBadge}
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function selectYearRecord(year) {
+            selectedYear = year;
+            renderTimeline();
+
+            const item = CHRONOLOGY_LIBRARY.find(record => record.year === year);
+            if (!item) return;
+
+            // 1. Reset all embedded players to stop playback and clear state
+            const allPlayers = document.querySelectorAll(".video-player-frame");
+            allPlayers.forEach(player => {
+                if (player.tagName === "IFRAME") {
+                    player.src = "";
+                }
+                player.classList.add("hidden");
+            });
+
+            // 2. Load the active video dynamically with autoplay + explicit origin (fixes error 153)
+            if (!item.inProgress) {
+                const activePlayer = document.getElementById(`embed-${year}`);
+                if (activePlayer) {
+                    activePlayer.src = `https://www.youtube.com/embed/${item.youtubeId}?rel=0&autoplay=1&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(SITE_ORIGIN)}`;
+                    activePlayer.classList.remove("hidden");
+                }
+            } else {
+                // Show the "In Progress" diagnostic screen
+                const activePlayer = document.getElementById(`embed-${year}`);
+                if (activePlayer) {
+                    activePlayer.classList.remove("hidden");
+                }
+            }
+
+            // 3. Update Details Panel Content
+            const detailsContainer = document.getElementById("active-track-details");
+            const externalAction = item.inProgress 
+                ? `<div class="text-[11px] text-zinc-600 font-mono italic">Recording pipeline status: Active</div>`
+                : `<a href="https://www.youtube.com/watch?v=${item.youtubeId}" target="_blank" rel="noopener noreferrer" 
+                      class="px-4 py-1.5 border border-zinc-800 hover:border-zinc-400 hover:bg-white hover:text-black text-[11px] font-mono tracking-wider rounded transition-all duration-300">
+                      WATCH ON YOUTUBE ↗
+                   </a>`;
+
+            detailsContainer.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-zinc-900 pb-4 animate-fade-in">
+                    <div>
+                        <span class="text-[10px] text-zinc-600 font-mono tracking-widest uppercase">Chronological Cut ${item.year}</span>
+                        <h2 class="text-xl font-light text-white tracking-wide mt-1">${item.title}</h2>
+                    </div>
+                    <div>
+                        ${externalAction}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-light text-zinc-400 leading-relaxed animate-fade-in" style="animation-delay: 0.05s;">
+                    <div class="space-y-2">
+                        <span class="block text-[10px] text-zinc-600 font-mono tracking-widest uppercase">Lyrical Backbone</span>
+                        <p class="text-zinc-300 font-mono font-medium">${item.song}</p>
+                        <p class="italic text-[11px] text-zinc-500 mt-2 block">"${item.tagline}"</p>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="block text-[10px] text-zinc-600 font-mono tracking-widest uppercase">Production Logs</span>
+                        <p class="text-zinc-300">${item.note}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize App on Window Boot
+        window.onload = function() {
+            renderTimeline();
+            selectYearRecord("2025"); // Auto-play the newest complete sequence
+        }
+    </script>
+</body>
+</html>
